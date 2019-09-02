@@ -33,7 +33,7 @@ after_script:
   - cd ./public
   - git init
   - git config user.name "D-107"
-  - git config user.email "d-107@m-finder.com"
+  - git config user.email "m@m-finder.com"
   - git add .
   - git commit -m "Travis ci push"
   - git push --force --quiet "https://${travis_token}@${gh_repo}" master:master
