@@ -3,12 +3,12 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: Hexo
-subtitle:
-description:
-keywords:
-author: John Doe
-language: en
+title: D-107
+subtitle: D-107 3wly 项目开发组自留地
+description: D-107 3wly 项目开发组自留地
+keywords: d-107,m-finder,3wly,blank,技术博客,技术分享
+author: D-107
+language: zh-CN
 timezone:
 
 # URL
@@ -73,7 +73,7 @@ pagination_dir: page
 # Extensions
 ## Plugins: https://hexo.io/plugins/
 ## Themes: https://hexo.io/themes/
-theme: landscape
+theme: hexo-theme-sense
 
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
@@ -81,3 +81,21 @@ deploy:
   type: git
   repository: https://github.com/d-107/d-107.github.io
   branch: master
+
+# live2d
+live2d:
+  enable: true
+  scriptFrom: local
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  debug: false
+  model:
+    use: live2d-widget-model-wanko
+  display:
+    position: left
+    width: 200
+    height: 200
+  mobile:
+    show: false
