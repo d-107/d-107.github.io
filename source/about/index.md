@@ -12,4 +12,4 @@ D-107 3wly 项目开发组自留地。
 * Android
 
 
-![码不能停](about/index/happy-codding.jpg)
+![码不能停](/about/index/happy-codding.jpg)
