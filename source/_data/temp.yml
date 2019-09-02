@@ -1,0 +1,71 @@
+
+# html lang
+language: zh-CN
+
+# site info
+description: D-107 3wly 项目开发组自留地
+keywords: d-107,m-finder,3wly,blank,技术博客,技术分享
+# main menu navigation
+menu:
+  首页: /
+  归档: /archives
+  关于: /about
+
+# SubNav
+subnav:
+  github: "#"
+  weibo: "#"
+  rss: "#"
+  zhihu: "#"
+  #qq: "#"
+  #weixin: "#"
+  #jianshu: "#"
+  #douban: "#"
+  #segmentfault: "#"
+  #bilibili: "#"
+  #acfun: "#"
+  #mail: "mailto:m@m-finder.com"
+  #facebook: "#"
+  #google: "#"
+  #twitter: "#"
+  #linkedin: "#"
+
+# Miscelaneous
+favicon: /images/favicon.ico
+logo: /images/d-107.png
+
+# friend links
+friends:
+  M-finder: https://www.m-finder.com
+  AprilBlank: http://www.aprilblank.com
+  大白: http://blog.csdn.net/qq_27948659
+  Sgclzqq: http://www.sgclzqq.com/
+  Wait: https://93xiaosi.github.io/
+  WangWeiQiang: https://thekingstyle.github.io/
+
+
+# gitment
+gitment:
+  enable: true
+  lazy: false
+  github_user: d-107
+  github_repo: d-107-gitment
+  client_id: 442955f646e2b65177d0
+  client_secret: 0bf30cc94b2bae7bec6290d0bd9e3e4c2a145bb0
+
+# stylesheets loaded in the <head>
+stylesheets:
+  - /css/sense.css
+
+# scripts loaded in the end of the body
+scripts:
+  - /js/jquery-3.4.1.min.js
+  - /js/sense.js
+  - /js/image-view.js
+
+# 樱花飘落效果
+sakura: true
+# 雪花效果
+snow: false
+# 点击爆炸效果
+firework: true

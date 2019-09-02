@@ -1,0 +1,74 @@
+.content {
+  width: 100%;
+}
+.content .content-inner {
+  margin: 0 auto;
+  max-width: 800px;
+}
+.content .content-inner .recent-posts .recent-post-item {
+  margin: 0 auto;
+}
+.content .content-inner .recent-posts .recent-post-item h1 {
+  position: relative;
+  overflow: hidden;
+  font-size: 18px;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .article-link {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  position: relative;
+  padding: 0 10px 0 0;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .article-link .title-href {
+  max-width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .article-link:after {
+  content: "";
+  display: block;
+  width: 800px;
+  position: absolute;
+  top: 22px;
+  border-top: 1px solid #eee;
+  left: 100%;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .post-time {
+  top: 0;
+  right: 0;
+  color: #777;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: absolute;
+  background-color: #fff;
+  padding-left: 10px;
+  max-width: 50%;
+  font-weight: 400;
+  line-height: 43px;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .new-article {
+  font-weight: normal;
+  font-size: 24px;
+  color: #a0cfe4;
+  position: absolute;
+  left: -45px;
+  bottom: 18px;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .articles-tag {
+  font-weight: normal;
+  font-size: 24px;
+  color: #999;
+  background: #eee;
+  padding: 13px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+.content .content-inner .recent-posts .recent-post-item h1 .articles-tag:hover {
+  opacity: 0.8;
+}
+
+/*# sourceMappingURL=content.css.map */
