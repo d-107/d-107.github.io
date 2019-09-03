@@ -783,6 +783,56 @@ h1 {
   -o-transition: color 0.3s;
   transition: color 0.3s;
 }
+.content .content-inner .archive-detail .archive-title {
+  color: #696969;
+  font-weight: 300;
+  line-height: 35px;
+  margin: 0px;
+  font-size: 26px;
+  transition: color 0.3s;
+}
+.content .content-inner .archive-detail .archive-header {
+  margin-top: 45px;
+  padding: 10px 0 10px 0px;
+  margin-bottom: 45px;
+  border-bottom: 1px solid #dcdcdc;
+}
+.content .content-inner .archive-detail h4 {
+  margin-top: 20px;
+  font-weight: normal;
+  color: #574C4C;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+.content .content-inner .archive-detail .category-list .tag-list .archive-list {
+  line-height: 28px;
+  padding: 35px;
+  list-style: none;
+  font-size: 14px;
+  margin: 10px 0px;
+}
+.content .content-inner .archive-detail a {
+  color: #08c;
+}
+.content .content-inner .archive-detail ul, .content .content-inner .archive-detail ol {
+  list-style: none;
+  font-size: 14px;
+  margin: 10px 0px;
+  line-height: 28px;
+  padding: 35px;
+}
+.content .content-inner .archive-detail ul li:before, .content .content-inner .archive-detail ol li:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  background: #aaa;
+  display: inline-block;
+  margin-right: 10px;
+  float: left;
+  margin-top: 10px;
+}
 
 @media (max-width: 860px) {
   .content .content-inner {
