@@ -1,0 +1,36 @@
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; <%= date(new Date(), 'YYYY') %> <%= config.author || config.title %>
+        </div>
+        <div class="site-nav">
+            <% Object.keys(theme.friends).forEach(function(key) { %>
+                <li class="nav-link">
+                    <a href="<%= theme.friends[key] %>" target="_blank"><%= key %></a>
+                </li>
+            <% }); %>
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+<% if(theme.sakura){%>
+    <%- js('/js/sakura') %>
+<% }%>
+<% if (theme.scripts !== undefined && theme.scripts.length > 0) { %>
+    <!-- scripts list from theme config.yml -->
+    <% theme.scripts.forEach(function(url) { %>
+        <script src="<%=url%>"></script>
+    <% }); %>
+<% } %>
+<% if(theme.snow){%>
+    <%- js('/js/snow') %>
+<% }%>
+<% if(theme.firework){%>
+    <%- js('/js/firework') %>
+<% }%>
+
+

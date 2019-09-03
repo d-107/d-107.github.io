@@ -1,0 +1,248 @@
+.content {
+  width: 100%;
+  margin-top: 90px;
+}
+
+.content .content-inner {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.content .content-inner .recent-posts .recent-post-item {
+  margin: 0 auto;
+  position: relative;
+}
+
+.content .content-inner .recent-posts .recent-post-item .new-article-tag {
+  position: absolute;
+  left: -45px;
+  top: 14px;
+  color: #fb929e;
+  font-size: 22px;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 {
+  position: relative;
+  overflow: hidden;
+  font-size: 18px;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .article-link {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  position: relative;
+  padding: 0 10px 0 0;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .article-link .title-href {
+  max-width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .article-link:after {
+  content: '';
+  display: block;
+  width: 800px;
+  position: absolute;
+  top: 22px;
+  border-top: 1px solid #eee;
+  left: 100%;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .post-time {
+  top: 0;
+  right: 0;
+  color: #777;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: absolute;
+  background-color: #fff;
+  padding-left: 10px;
+  max-width: 50%;
+  font-weight: 400;
+  line-height: 43px;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .articles-tag {
+  font-weight: normal;
+  font-size: 24px;
+  color: #999;
+  background: #eee;
+  padding: 13px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+
+.content .content-inner .recent-posts .recent-post-item h1 .articles-tag:hover {
+  opacity: .8;
+}
+
+.content .content-inner .article-detail {
+  margin-top: 160px;
+}
+
+.content .content-inner .article-detail .article-header {
+  margin-top: 45px;
+  padding: 10px 0 10px 0px;
+  margin-bottom: 45px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.content .content-inner .article-detail .article-header .article-title {
+  color: #696969;
+  font-weight: 300;
+  line-height: 35px;
+  margin: 0px;
+  font-size: 26px;
+  transition: color .3s;
+}
+
+.content .content-inner .article-detail .article-entry {
+  line-height: 28px;
+  padding: 35px;
+}
+
+.content .content-inner .article-detail .article-entry a {
+  color: #08c;
+}
+
+.content .content-inner .article-detail .article-entry ul, .content .content-inner .article-detail .article-entry ol {
+  list-style: none;
+  font-size: 14px;
+  margin: 10px 0px;
+}
+
+.content .content-inner .article-detail .article-entry ul li:before, .content .content-inner .article-detail .article-entry ol li:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  background: #aaa;
+  display: inline-block;
+  margin-right: 10px;
+  float: left;
+  margin-top: 10px;
+}
+
+.content .content-inner .article-detail .article-entry img {
+  max-width: 100%;
+}
+
+.content .content-inner .article-detail .article-entry p {
+  margin-top: 10px;
+}
+
+.content .content-inner .article-detail .article-entry h1, .content .content-inner .article-detail .article-entry h2, .content .content-inner .article-detail .article-entry h3, .content .content-inner .article-detail .article-entry h4, .content .content-inner .article-detail .article-entry h5, .content .content-inner .article-detail .article-entry h6 {
+  margin-top: 20px;
+  font-weight: bold;
+  color: #574C4C;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.content .content-inner .article-detail #article-nav {
+  padding: 20px 32px 10px;
+  min-height: 30px;
+  border-top: 1px solid #dcdcdc;
+}
+
+.content .content-inner .article-detail #article-nav #article-nav-older {
+  float: right;
+}
+
+.content .content-inner .article-detail #article-nav .article-nav-link-wrap {
+  font-size: 14px;
+  color: #08c;
+}
+
+.content .content-inner .article-detail #article-nav .article-nav-link-wrap .article-nav-title {
+  display: inline-block;
+  font-size: 16px;
+  -webkit-transition: color 0.3s;
+  -o-transition: color 0.3s;
+  transition: color 0.3s;
+}
+
+.content .content-inner .archive-detail .archive-title {
+  color: #696969;
+  font-weight: 300;
+  line-height: 35px;
+  margin: 0px;
+  font-size: 26px;
+  transition: color .3s;
+}
+
+.content .content-inner .archive-detail .archive-header {
+  margin-top: 45px;
+  padding: 10px 0 10px 0px;
+  margin-bottom: 45px;
+  border-bottom: 1px solid #dcdcdc;
+}
+
+.content .content-inner .archive-detail h4 {
+  margin-top: 20px;
+  font-weight: normal;
+  color: #574C4C;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #ddd;
+}
+
+.content .content-inner .archive-detail .category-list .tag-list .archive-list {
+  line-height: 28px;
+  padding: 35px;
+  list-style: none;
+  font-size: 14px;
+  margin: 10px 0px;
+}
+
+.content .content-inner .archive-detail a {
+  color: #08c;
+}
+
+.content .content-inner .archive-detail ul, .content .content-inner .archive-detail ol {
+  list-style: none;
+  font-size: 14px;
+  margin: 10px 0px;
+  line-height: 28px;
+  padding: 35px;
+}
+
+.content .content-inner .archive-detail ul li:before, .content .content-inner .archive-detail ol li:before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border: 1px solid #999;
+  border-radius: 10px;
+  background: #aaa;
+  display: inline-block;
+  margin-right: 10px;
+  float: left;
+  margin-top: 10px;
+}
+
+@media (max-width: 860px) {
+  .content .content-inner {
+    max-width: 80%;
+  }
+  .content .content-inner .recent-posts .recent-post-item .new-article-tag {
+    display: none;
+  }
+  .content .content-inner .recent-posts .recent-post-item h1 {
+    font-size: 14px;
+  }
+  .content .content-inner .recent-posts .recent-post-item h1 .articles-tag {
+    padding: 5px;
+  }
+  .content .content-inner .recent-posts .recent-post-item h1 .post-time {
+    font-size: 8px;
+  }
+  .content .content-inner .recent-posts .recent-post-item h1 .article-link .title-href {
+    max-width: 180px;
+  }
+}

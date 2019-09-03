@@ -1,0 +1,10 @@
+#search {
+  width: 250px;
+  height: 100vh;
+  position: fixed;
+  right: 0;
+  top: 75px;
+  background: linear-gradient(200deg, #a0cfe4, #e8c37e);
+}
+
+/*# sourceMappingURL=search.css.map */

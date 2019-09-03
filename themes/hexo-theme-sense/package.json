@@ -1,0 +1,9 @@
+{
+  "name": "sense",
+  "version": "0.0.0",
+  "description": "sense hexo theme",
+  "private": true,
+  "devDependencies": {
+
+  }
+}

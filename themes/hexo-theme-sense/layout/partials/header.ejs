@@ -1,0 +1,54 @@
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            <% if(theme.logo){ %>
+                <img src="<%= theme.logo %>" class="logo"/>
+            <% }else{ %>
+                <%= config.title %>
+            <% } %>
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            <% Object.keys(theme.menu).forEach(function(key) { %>
+                <li class="nav-link">
+                    <a <% if(is_current(theme.menu[key])){ %>class="active" <% } %>href="<%= theme.menu[key] %>">
+                        <%= key %>
+                    </a>
+                </li>
+            <% }); %>
+        </ul>
+    </div>
+</header>
+
+<% if (is_home()){%>
+    <section class="video-box">
+        <div class="video">
+            <div class="video-frame">
+                <img src="/images/overlay-hero.png" alt="Decorative image frame">
+            </div>
+            <div class="video-media">
+                <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                       poster="/images/sense.png" x5-video-player-type="h5">
+                    <source src="/video/sense.mp4" type="video/mp4">
+                    <source src="/video/sense.ogv" type="video/ogg">
+                    <source src="/video/sense.webm" type="video/webm">
+                    <p>Your user agent does not support the HTML5 Video element.</p>
+                </video>
+                <div class="video-overlay"></div>
+            </div>
+            <div class="video-inner text-center text-white">
+                <h1><a href="/"><%= config.title %></a></h1>
+                <p><%= theme.description %></p>
+                <p class="social">
+                    <% for (var i in theme.subnav){ %>
+                        <a class="<%= i %>" target="_blank" href="<%- url_for(theme.subnav[i]) %>" title="<%= i %>"><i class="icon-<%= i %>"></i></a>
+                    <%}%>
+                </p>
+            </div>
+        </div>
+    </section>
+<% }%>
+

@@ -1,0 +1,30 @@
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            <% if (site.tags.length > 0) { %>
+                <ul id="search-tags" data-count="<%=site.tags.length%>">
+                    <% site.tags.each(function(tag) { %>
+                        <li data-url="<%=config.root + tag.path%>" ><%=tag.name%></li>
+                    <% }); %>
+                </ul>
+            <% } %>
+
+            <ul id="search-articles">
+                <% site.posts.sort('date', -1).each(function(post) { %>
+                    <li data-url="<%= config.root + post.path %>" data-date="<%= date(post.date) %>"
+                        data-name="<%=post.title%>" class="search-article hide">
+                        <a href="<%= config.root + post.path %>" class="search-article-name"><i class="icon-quo-left icon"></i><%=post.title%></a>
+                        <span class="post-time"><%= date(post.date) || '-' %></span>
+                        <% post.tags.each(function(tag) { %>
+                            <span data-url="<%= config.root + tag.path %>" data-name="<%= tag.name%>" class="search-articles-tag"><%=tag.name %></span>
+                        <% }); %>
+                    </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>

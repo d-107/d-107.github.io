@@ -1,0 +1,73 @@
+
+# html lang
+language: zh-CN
+
+# site info
+description: 我是小妖怪，逍遥游自在，杀人不眨眼，吃人不放盐
+keywords: d-107,m-finder,3wly,技术博客,技术分享
+# main menu navigation
+menu:
+  Home: /
+  About: /about
+  Contact: /contact
+  Archives: /archives
+
+# SubNav
+subnav:
+  github: "#"
+  weibo: "#"
+  rss: "#"
+  zhihu: "#"
+  #qq: "#"
+  #weixin: "#"
+  #jianshu: "#"
+  #douban: "#"
+  #segmentfault: "#"
+  #bilibili: "#"
+  #acfun: "#"
+  #mail: "mailto:m@m-finder.com"
+  #facebook: "#"
+  #google: "#"
+  #twitter: "#"
+  #linkedin: "#"
+
+# Miscelaneous
+favicon: /images/favicon.ico
+logo: /images/d-107.png
+
+# friend links
+friends:
+  M-finder: https://www.m-finder.com
+  AprilBlank: http://www.aprilblank.com
+  大白: http://blog.csdn.net/qq_27948659
+  Sgclzqq: http://www.sgclzqq.com/
+  Wait: https://93xiaosi.github.io/
+  WangWeiQiang: https://thekingstyle.github.io/
+
+
+# gitment
+gitment:
+  enable: true
+  lazy: false # Comments lazy loading with a button
+  github_user: user # MUST HAVE, Your Github Username
+  github_repo: repo # MUST HAVE, The name of the repo you use to store Gitment comments
+  client_id: id # MUST HAVE, Github client id for the Gitment
+  client_secret: secret
+
+
+# stylesheets loaded in the <head>
+stylesheets:
+- /css/sense.css
+
+# scripts loaded in the end of the body
+scripts:
+- /js/jquery-3.4.1.min.js
+- /js/sense.js
+- /js/image-view.js
+
+# 樱花飘落效果
+sakura: true
+# 雪花效果
+snow: false
+# 点击爆炸效果
+firework: true

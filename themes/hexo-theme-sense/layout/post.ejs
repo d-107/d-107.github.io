@@ -1,0 +1,36 @@
+<article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title"><%= page.title %></h1>
+    </header>
+
+    <div class="article-entry">
+        <%- page.content %>
+    </div>
+
+    <% if (page.prev || page.next){ %>
+        <nav id="article-nav">
+            <% if (page.prev){ %>
+                <a href="<%- url_for(page.prev.path) %>" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        <% if (page.prev.title){ %>
+                            <%= page.prev.title %>
+                        <% } else { %>
+                            (no title)
+                        <% } %>
+                    </div>
+                </a>
+            <% } %>
+            <% if (page.next){ %>
+                <a href="<%- url_for(page.next.path) %>" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title"><%= page.next.title %></div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            <% } %>
+        </nav>
+    <% } %>
+</article>
+
+<%- partial('partials/comment') %>
+
+<%- paginator() %>

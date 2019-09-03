@@ -1,0 +1,19 @@
+<div id="container"></div>
+<% if(theme.gitment.enable === true){%>
+<link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
+<script src="https://aimingoo.github.io/gitmint/dist-trial/gitmint.browser.js"></script>
+<script>
+    var gitment = new Gitmint({
+        //评论issue唯一ID
+        id: '<%= page.date %>',
+        owner: '<%= theme.gitment.github_user %>',
+		admin: [<%- theme.gitment.admins %>],
+        repo: '<%= theme.gitment.github_repo %>',
+        oauth: {
+            client_id: '<%= theme.gitment.client_id %>',
+            client_secret: '<%= theme.gitment.client_secret %>',
+        },
+    })
+    gitment.render('container')
+</script>
+<% } %>

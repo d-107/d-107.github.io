@@ -1,0 +1,241 @@
+.img-view-dialog {
+  position: fixed;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.img-view-content {
+  display: inline-block;
+  margin: 15px auto;
+  border-radius: 4px;
+  padding: 10px;
+  visibility: visible;
+  background: #fff url(./images/loading.gif) no-repeat center;
+  -moz-transition: transform 0.6s, margin 0.6s;
+  -webkit-transition: transform 0.6s, margin 0.6s;
+  -o-transition: transform 0.6s, margin 0.6s;
+  transition: transform 0.6s, margin 0.6s;
+  cursor: -webkit-grab;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: flyin 0.5s;
+  -moz-animation: flyin 0.5s;
+  animation: flyin 0.5s;
+}
+
+.loadingImg.img-view-content {
+  background: #fff;
+}
+
+.loadingImg .dialog-img {
+  opacity: 1;
+}
+
+.img-view-content img {
+  display: block;
+  opacity: 0;
+  -moz-transition: all 0.6s;
+  -o-transition: all 0.6s;
+  -webkit-transition: all 0.6s;
+  transition: all 0.6s;
+  min-width: 0;
+  max-width: none;
+  min-height: 0;
+  max-height: none;
+  vertical-align: baseline;
+}
+
+.closing .img-view-mask {
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: fadeout 0.5s;
+  -moz-animation: fadeout 0.5s;
+  animation: fadeout 0.5s;
+}
+
+.closing .img-view-content {
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: flyout 0.5s;
+  -moz-animation: flyout 0.5s;
+  animation: flyout 0.5s;
+}
+
+.closing .dialog-tool {
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: fadeout 0.5s;
+  -moz-animation: fadeout 0.5s;
+  animation: fadeout 0.5s;
+}
+
+.dialog-tool {
+  z-index: 2;
+  -webkit-backface-visibility: hidden;
+  -webkit-animation: fadein 0.5s;
+  -moz-animation: fadein 0.5s;
+  animation: fadein 0.5s;
+}
+
+.close-dialog {
+  background: url(./images/photoTheater.png) no-repeat -1px -128px;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  display: block;
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  cursor: pointer;
+}
+
+.rotate-dialog {
+  background-image: url(./images/rotate.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 0 0;
+  width: 20px;
+  height: 20px;
+  overflow: hidden;
+  display: block;
+  position: fixed;
+  right: 60px;
+  top: 20px;
+  cursor: pointer;
+}
+
+.dialog-tool .rotate-dialog:hover {
+  background-position: 0 -20px;
+}
+
+.dialog-tool .close-dialog:hover {
+  background-position: -1px -149px;
+}
+
+.dialog-tool .previous-dialog,
+.dialog-tool .next-dialog,
+.dialog-tool .next-dialog:hover,
+.dialog-tool .previous-dialog:hover {
+  background: url(./images/photoTheater.png) no-repeat 0 0;
+  background-position-x: 0px;
+  background-position-y: 0px;
+  width: 66px;
+  height: 60px;
+  line-height: 66px;
+  display: block;
+  position: fixed;
+  top: 45%;
+  cursor: pointer;
+  overflow: hidden;
+  font-size: 40px;
+  font-weight: bold;
+  margin-top: -30px;
+  text-align: center;
+}
+
+.dialog-tool .next-dialog {
+  background-position: 0 -65px;
+  right: 0;
+}
+
+.dialog-tool .previous-dialog {
+  left: 0;
+  background-position: -70px -65px;
+}
+
+.dialog-tool .next-dialog:hover {
+  background-position: 0 0;
+}
+
+.dialog-tool .previous-dialog:hover {
+  background-position: -70px 0;
+}
+
+@-webkit-keyframes flyin {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+@keyframes flyin {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+    -ms-transform: translateY(-40px);
+    transform: translateY(-40px);
+  }
+  100% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+@-webkit-keyframes flyout {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+    -ms-transform: translateY(-40px);
+    transform: translateY(-40px);
+  }
+}
+@keyframes flyout {
+  0% {
+    opacity: 1;
+    -webkit-transform: translateY(0);
+    -ms-transform: translateY(0);
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateY(-40px);
+    -ms-transform: translateY(-40px);
+    transform: translateY(-40px);
+  }
+}
+@-webkit-keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeout {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@-webkit-keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes fadein {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/*# sourceMappingURL=image-view.css.map */
