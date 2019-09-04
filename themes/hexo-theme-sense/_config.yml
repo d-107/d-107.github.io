@@ -47,7 +47,7 @@ friends:
 
 # gitment
 gitment:
-  enable: true
+  enable: false
   lazy: false # Comments lazy loading with a button
   github_user: user # MUST HAVE, Your Github Username
   github_repo: repo # MUST HAVE, The name of the repo you use to store Gitment comments
@@ -56,6 +56,7 @@ gitment:
 
 # valine
 valine:
+  enable: false
   appId: appid
   appKey: appkey
   notify: false
