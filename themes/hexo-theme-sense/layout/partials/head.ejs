@@ -11,8 +11,6 @@ pageTitle += (pageTitle.length > 0 ?  " | " : '') + config.title +  (theme.descr
     <meta charset="UTF-8">
     <meta name="renderer" content="webkit">
     <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-    <meta name="description" content="<% pageTitle + theme.description || '' %>">
-    <meta name="keywords" content="<% theme.keywords || '' %>">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     <%- open_graph({twitter_id: theme.twitter, google_plus: theme.google_plus, fb_admins: theme.fb_admins, fb_app_id: theme.fb_app_id}) %>
     <title><%= pageTitle %></title>
