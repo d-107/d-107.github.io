@@ -1,80 +1,74 @@
-
 <%
-var categoriesList = list_categories({ show_count: false }),
-  tagsList = list_tags({ show_count: false }),
-  archivesList = list_archives({ show_count: false });
+var categoriesList = list_categories({show_count: false}),
+        tagsList = list_tags({show_count: false}),
+        archivesList = list_archives({show_count: false});
 %>
 
 <% if (!is_year()) { %>
-  <div id="archive" class="archive-detail">
-    <header class="archive-header">
-      <h1 class="archive-title">归档</h1>
-    </header>
-    <% if (theme.atom) { %>
-      <p>
-        The feed is available via
-        <a href="<%=theme.atom%>">atom</a>.
-      </p>
-      <br>
-    <% } %>
+    <div id="archive" class="archive-detail">
+        <header class="archive-header">
+            <h1 class="archive-title">归档</h1>
+        </header>
+        <% if (theme.atom) { %>
+        <p>
+            The feed is available via
+            <a href="<%= theme.atom %>">atom</a>.
+        </p>
+        <br>
+        <% } %>
 
-    <aside>
-      <h4>分类</h4>
-      <% if (categoriesList) { %>
-        <%-categoriesList%>
-      <% } else { %>
-        <p>None.</p>
-      <% } %>
-    </aside>
-    <br>
+        <aside>
+            <h4>分类</h4>
+            <% if (categoriesList) { %>
+            <%- categoriesList %>
+            <% } else { %>
+                <p>None.</p>
+            <% } %>
+        </aside>
+        <br>
 
-    <aside>
-      <h4>标签</h4>
-      <% if (tagsList) { %>
-        <%-tagsList%>
-      <% } else { %>
-        <p>None.</p>
-      <% } %>
-    </aside>
-    <br>
+        <aside>
+            <h4>标签</h4>
+            <% if (tagsList) { %>
+            <%- tagsList %>
+            <% } else { %>
+                <p>None.</p>
+            <% } %>
+        </aside>
+        <br>
 
-    <aside>
-      <h4>日期</h4>
-      <% if (archivesList) { %>
-        <%-archivesList%>
-      <% } else { %>
-        <p>None.</p>
-      <% } %>
-    </aside>
+        <aside>
+            <h4>日期</h4>
+            <% if (archivesList) { %>
+            <%- archivesList %>
+            <% } else { %>
+                <p>None.</p>
+            <% } %>
+        </aside>
 
-  </div>
-<% } else { %>
-  <div id="archive" class="archive-detail">
-  <header class="archive-header">
-    <h1 class="archive-title"><%=page.month + '/' + page.year%></h1>
-  </header>
-
-  <% page.posts.each(function(article) { %>
-    <div class="archive-item">
-      <% if (article.link) { %>
-        <!-- external link -->
-        <a href="<%=url_for(article.link)%>" target="_blank">
-          <%=article.title || 'No Title'%>
-        </a>
-      <% } else { %>
-        <!-- internal link -->
-        <a href="<%=url_for(article.path)%>">
-          <%=article.title || 'No Title'%>
-        </a>
-      <% } %>
-      <time datetime="<%=date_xml(article.date)%>">
-        <%=date(article.date)%>
-      </time>
     </div>
-  </div>
-  <% }); %>
+<% } else { %>
+<div id="archive" class="archive-detail">
+    <h1 class="archive-title"><%= page.year + '-' + page.month %></h1>
 
-  <%-paginator()%>
+    <% page.posts.each(function(article) { %>
+        <div class="archive-item">
+            <h1>
+              <span class="article-link">
+                <i class="iconfont articles-tag">&#xe633;</i>
+                <a class="title-href" href="<%= url_for(article.path) %>"
+                   title="<%= article.title || 'No Title' %>"><%= article.title || 'No Title' %></a>
+              </span>
+                <time class="post-time" datetime="<%= date_xml(article.date) %>">
+                    <%= date(article.date) %>
+                </time>
+            </h1>
+        </div>
+    <% }); %>
+</div>
+
+
+<%- paginator() %>
 
 <% } %>
 

@@ -6,7 +6,7 @@ tags: test
 
 这是一篇测试。
 
-![](hello-php/cover.png)
+![](cover.png)
 ```php
 $hello = '你好啊，大哈！';
 echo $hello;

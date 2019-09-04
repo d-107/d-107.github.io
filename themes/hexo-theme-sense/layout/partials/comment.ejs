@@ -15,13 +15,14 @@
         gitment.render('container')
     </script>
 <% } %>
+
 <% if(theme.valine.enable === true){ %>
     <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
     <script>
         new Valine({
             el: '#container',
-            appId: '<%= theme.valine.app_id %>',
-            appKey: '<%= theme.valine.app_key %>',
+            appId: '<%= theme.valine.appId %>',
+            appKey: '<%= theme.valine.appKey %>',
             notify: '<%= theme.valine.notify %>',
             verify: '<%= theme.valine.verify %>',
             avatar:'mp',
