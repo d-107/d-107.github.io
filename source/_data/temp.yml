@@ -13,18 +13,18 @@ menu:
 
 # SubNav
 subnav:
-  github: "#"
-  weibo: "#"
-  rss: "#"
-  zhihu: "#"
-  #qq: "#"
+  github: "https://github.com/d-107"
+  # weibo: "#"
+  # rss: "#"
+  # zhihu: "#"
+  qq: "//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d"
   #weixin: "#"
   #jianshu: "#"
   #douban: "#"
   #segmentfault: "#"
   #bilibili: "#"
   #acfun: "#"
-  #mail: "mailto:m@m-finder.com"
+  mail: "mailto:m@m-finder.com"
   #facebook: "#"
   #google: "#"
   #twitter: "#"
@@ -37,7 +37,7 @@ logo: /images/d-107.png
 # friend links
 friends:
   M-finder: https://www.m-finder.com
-  AprilBlank: http://www.aprilblank.com
+  AprilBlank: https://www.cnblogs.com/AprilBlank/
   大白: http://blog.csdn.net/qq_27948659
   Sgclzqq: http://www.sgclzqq.com/
   Wait: https://93xiaosi.github.io/
