@@ -1,6 +1,6 @@
 
-<div id="tag">
-  <h1><%=page.tag%></h1>
+<div id="tag" class="tag-detail">
+  <h1 class="tag-title"><%=page.tag%></h1>
   <% page.posts.each(function(article) { %>
     <div class="tag-item">
       <% if (article.link) { %>

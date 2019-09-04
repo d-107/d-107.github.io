@@ -1,19 +1,31 @@
 <div id="container"></div>
-<% if(theme.gitment.enable === true){%>
-<link rel="stylesheet" href="https://aimingoo.github.io/gitmint/style/default.css">
-<script src="https://aimingoo.github.io/gitmint/dist-trial/gitmint.browser.js"></script>
-<script>
-    var gitment = new Gitmint({
-        //评论issue唯一ID
-        id: '<%= page.date %>',
-        owner: '<%= theme.gitment.github_user %>',
-		admin: [<%- theme.gitment.admins %>],
-        repo: '<%= theme.gitment.github_repo %>',
-        oauth: {
-            client_id: '<%= theme.gitment.client_id %>',
-            client_secret: '<%= theme.gitment.client_secret %>',
-        },
-    })
-    gitment.render('container')
-</script>
+<% if(theme.gitment.enable === true){ %>
+    <link rel="stylesheet" href="https://imsun.github.io/gitment/style/default.css">
+    <script src="https://imsun.github.io/gitment/dist/gitment.browser.js"></script>
+    <script>
+        var gitment = new Gitment({
+            id: '<%= page.date %>',
+            owner: '<%= theme.gitment.github_user %>',
+            repo: '<%= theme.gitment.github_repo %>',
+            oauth: {
+                client_id: '<%= theme.gitment.client_id %>',
+                client_secret: '<%= theme.gitment.client_secret %>',
+            },
+        })
+        gitment.render('container')
+    </script>
+<% } %>
+<% if(theme.valine.enable === true){ %>
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: '<%= theme.valine.app_id %>',
+            appKey: '<%= theme.valine.app_key %>',
+            notify: '<%= theme.valine.notify %>',
+            verify: '<%= theme.valine.verify %>',
+            avatar:'mp',
+            placeholder: '<%= theme.valine.placeholder %>'
+        })
+    </script>
 <% } %>

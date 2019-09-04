@@ -54,6 +54,13 @@ gitment:
   client_id: id # MUST HAVE, Github client id for the Gitment
   client_secret: secret
 
+# valine
+valine:
+  appId: appid
+  appKey: appkey
+  notify: false
+  verify: false
+  placeholder:  '来啊，快活啊 (๑•ᴗ•๑)'
 
 # stylesheets loaded in the <head>
 stylesheets:

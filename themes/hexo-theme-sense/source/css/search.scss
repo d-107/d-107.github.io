@@ -8,7 +8,7 @@
   max-width: 0;
   overflow: hidden;
   transition: max-width .25s ease-in-out;
-  background: linear-gradient(200deg, #a0cfe4, #e8c37e);
+  background: linear-gradient(200deg, #07338e, #142c5d);
 
   .search-inner {
     padding: 15px;
@@ -32,22 +32,24 @@
         background: rgba(255, 255, 255, .1);
         overflow: hidden;
         padding: 15px;
+        width: 295px;
 
         li {
           display: inline-block;
           text-decoration: none;
           font-weight: normal;
           font-size: 10px;
-          color: #fff;
+          color: #142c5d;
           height: 18px;
           line-height: 18px;
           float: left;
           padding: 0 5px 0px 10px;
           position: relative;
           border-radius: 0 5px 5px 0;
-          margin: 5px 9px 5px 8px;
+          margin: 5px 20px 5px 8px;
           font-family: Menlo, Monaco, "Andale Mono", "lucida console", "Courier New", monospace;
-          background: #cc8167;
+          background: #facd52;
+
 
           &:before {
             content: " ";
@@ -57,14 +59,14 @@
             top: 0;
             left: -18px;
             border: 9px solid transparent;
-            border-right-color: #cc8167;
+            border-right-color: #facd52;
           }
 
           &:after {
             content: " ";
             width: 4px;
             height: 4px;
-            background-color: #fff;
+            background-color: #142c5d;
             border-radius: 4px;
             -webkit-box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.3);
             box-shadow: 0px 0px 0px 1px rgba(0, 0, 0, 0.3);
@@ -76,7 +78,7 @@
       }
 
       #search-articles {
-        color: #fff;
+        color: #142c5d;
         width: 100%;
         margin: 15px auto;
         overflow: hidden;
@@ -110,11 +112,12 @@
         .post-time {
           font-size: 12px;
           margin: 5px 5px 5px 0;
+          color: #fff;
 
           &:before {
             font-family: 'iconfont';
             content: "\E667";
-            color: #ffffff;
+            color: #fff;
             margin-right: 5px;
           }
         }
@@ -122,10 +125,10 @@
         .search-articles-tag {
           font-size: 12px;
           margin: 5px auto;
-
+          color: #fff;
           &:before {
             content: '#';
-            color: #ffffff;
+            color: #fff;
           }
         }
       }

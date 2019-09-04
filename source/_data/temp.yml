@@ -46,7 +46,7 @@ friends:
 
 # gitment
 gitment:
-  enable: true
+  enable: false
   lazy: false
   admins: 
     - "'m-finder'"
@@ -55,6 +55,15 @@ gitment:
   github_repo: d-107-gitment
   client_id: be9a4c4f23fb136eb563
   client_secret: 4d073881c7c960d6eb85082ebd1d33ceed88eab9
+
+# valine
+valine:
+  enable: true
+  appId: oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI
+  appKey: egs7BlX8kO6FuIdaXxDvhe07
+  notify: false
+  verify: false
+  placeholder:  '来啊，快活啊 (๑•ᴗ•๑)' 
 
 # stylesheets loaded in the <head>
 stylesheets:

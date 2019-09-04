@@ -6,10 +6,10 @@ var categoriesList = list_categories({ show_count: false }),
 %>
 
 <% if (!is_year()) { %>
-  <div id="archive">
-
-    <h1>Archives</h1>
-
+  <div id="archive" class="archive-detail">
+    <header class="archive-header">
+      <h1 class="archive-title">归档</h1>
+    </header>
     <% if (theme.atom) { %>
       <p>
         The feed is available via
@@ -19,7 +19,7 @@ var categoriesList = list_categories({ show_count: false }),
     <% } %>
 
     <aside>
-      <h2>Categories</h2>
+      <h4>分类</h4>
       <% if (categoriesList) { %>
         <%-categoriesList%>
       <% } else { %>
@@ -29,7 +29,7 @@ var categoriesList = list_categories({ show_count: false }),
     <br>
 
     <aside>
-      <h2>Tags</h2>
+      <h4>标签</h4>
       <% if (tagsList) { %>
         <%-tagsList%>
       <% } else { %>
@@ -39,7 +39,7 @@ var categoriesList = list_categories({ show_count: false }),
     <br>
 
     <aside>
-      <h2>Archives</h2>
+      <h4>日期</h4>
       <% if (archivesList) { %>
         <%-archivesList%>
       <% } else { %>
@@ -49,8 +49,10 @@ var categoriesList = list_categories({ show_count: false }),
 
   </div>
 <% } else { %>
-
-  <h1><%=page.month + '/' + page.year%></h1>
+  <div id="archive" class="archive-detail">
+  <header class="archive-header">
+    <h1 class="archive-title"><%=page.month + '/' + page.year%></h1>
+  </header>
 
   <% page.posts.each(function(article) { %>
     <div class="archive-item">
@@ -69,6 +71,7 @@ var categoriesList = list_categories({ show_count: false }),
         <%=date(article.date)%>
       </time>
     </div>
+  </div>
   <% }); %>
 
   <%-paginator()%>

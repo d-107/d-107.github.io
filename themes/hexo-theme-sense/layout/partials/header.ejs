@@ -23,32 +23,30 @@
     </div>
 </header>
 
-<% if (is_home()){%>
-    <section class="video-box">
-        <div class="video">
-            <div class="video-frame">
-                <img src="/images/overlay-hero.png" alt="Decorative image frame">
-            </div>
-            <div class="video-media">
-                <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
-                       poster="/images/sense.png" x5-video-player-type="h5">
-                    <source src="/video/sense.mp4" type="video/mp4">
-                    <source src="/video/sense.ogv" type="video/ogg">
-                    <source src="/video/sense.webm" type="video/webm">
-                    <p>Your user agent does not support the HTML5 Video element.</p>
-                </video>
-                <div class="video-overlay"></div>
-            </div>
-            <div class="video-inner text-center text-white">
-                <h1><a href="/"><%= config.title %></a></h1>
-                <p><%= theme.description %></p>
-                <p class="social">
-                    <% for (var i in theme.subnav){ %>
-                        <a class="<%= i %>" target="_blank" href="<%- url_for(theme.subnav[i]) %>" title="<%= i %>"><i class="icon-<%= i %>"></i></a>
-                    <%}%>
-                </p>
-            </div>
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
         </div>
-    </section>
-<% }%>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/"><%= config.title %></a></h1>
+            <p class="site-desc"><%= theme.description %></p>
+            <p class="social">
+                <% for (var i in theme.subnav){ %>
+                    <a class="<%= i %>" target="_blank" href="<%- url_for(theme.subnav[i]) %>" title="<%= i %>"><i class="icon-<%= i %>"></i></a>
+                <%}%>
+            </p>
+        </div>
+    </div>
+</section>
 
