@@ -181,13 +181,15 @@
         font-size: 26px;
         transition: color .3s;
       }
+
       .archive-header {
         margin-top: 45px;
         padding: 10px 0 10px 0px;
         margin-bottom: 45px;
         border-bottom: 1px solid #dcdcdc;
       }
-      h1,h2,h3,h4,h5,h6 {
+
+      h1, h2, h3, h4, h5, h6 {
         margin-top: 20px;
         font-weight: normal;
         color: #574C4C;
@@ -196,24 +198,30 @@
 
       .category-list .tag-list .archive-list {
         line-height: 28px;
+        padding: 35px;
         list-style: none;
         font-size: 14px;
-        border: 1px solid #dcdcdc;
-        padding: 5px 25px;
-        border-radius: 5px;
-        margin: 5px 15px;
-        &:hover{
+        margin: 10px 0px;
+      }
+
+      .category-list-item, .tag-list-item, .archive-list-item {
+        display: inline-block;
+        a {
+          display: inline-block;
+          border: 1px solid #dcdcdc;
+          padding: 5px 25px;
+          border-radius: 5px;
+          margin: 5px 15px;
+        }
+
+        &:before {
+          display: none;
+        }
+
+        &:hover {
           border-color: #142c5d;
         }
       }
-      .tag-list-item, .archive-list-item{
-        display: inline-block;
-        margin: 0 15px;
-        &:before{
-          display: none;
-        }
-      }
-
 
       ul, ol {
         list-style: none;
@@ -237,6 +245,159 @@
       }
     }
 
+    .category {
+      .category-title {
+        color: #696969;
+        font-weight: 300;
+        line-height: 35px;
+        margin: 0px;
+        font-size: 26px;
+        transition: color .3s;
+      }
+
+      .category-item {
+        margin: 0 auto;
+        position: relative;
+      }
+
+      h1 {
+        position: relative;
+        overflow: hidden;
+        font-size: 18px;
+
+        .article-link {
+          display: inline-block;
+          vertical-align: baseline;
+          zoom: 1;
+          position: relative;
+          padding: 0 10px 0 0;
+
+          .title-href {
+            max-width: 350px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+          }
+
+          &:after {
+            content: '';
+            display: block;
+            width: 800px;
+            position: absolute;
+            top: 22px;
+            border-top: 1px solid #eee;
+            left: 100%;
+          }
+        }
+
+        .post-time {
+          top: 0;
+          right: 0;
+          color: #777;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          position: absolute;
+          background-color: #fff;
+          padding-left: 10px;
+          max-width: 50%;
+          font-weight: 400;
+          line-height: 43px;
+        }
+
+        .articles-tag {
+          font-weight: normal;
+          font-size: 24px;
+          color: #999;
+          background: #eee;
+          padding: 13px;
+          border-radius: 50%;
+          vertical-align: top;
+
+          &:hover {
+            opacity: .8;
+          }
+        }
+      }
+    }
+
+    .tag-detail {
+      .tag-title {
+        color: #696969;
+        font-weight: 300;
+        line-height: 35px;
+        margin: 0px;
+        font-size: 26px;
+        transition: color .3s;
+      }
+
+      .tag-item {
+        margin: 0 auto;
+        position: relative;
+      }
+
+      h1 {
+        position: relative;
+        overflow: hidden;
+        font-size: 18px;
+
+        .article-link {
+          display: inline-block;
+          vertical-align: baseline;
+          zoom: 1;
+          position: relative;
+          padding: 0 10px 0 0;
+
+          .title-href {
+            max-width: 350px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: inline-block;
+          }
+
+          &:after {
+            content: '';
+            display: block;
+            width: 800px;
+            position: absolute;
+            top: 22px;
+            border-top: 1px solid #eee;
+            left: 100%;
+          }
+        }
+
+        .post-time {
+          top: 0;
+          right: 0;
+          color: #777;
+          font-size: 11px;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          position: absolute;
+          background-color: #fff;
+          padding-left: 10px;
+          max-width: 50%;
+          font-weight: 400;
+          line-height: 43px;
+        }
+
+        .articles-tag {
+          font-weight: normal;
+          font-size: 24px;
+          color: #999;
+          background: #eee;
+          padding: 13px;
+          border-radius: 50%;
+          vertical-align: top;
+
+          &:hover {
+            opacity: .8;
+          }
+        }
+      }
+    }
   }
 }
 

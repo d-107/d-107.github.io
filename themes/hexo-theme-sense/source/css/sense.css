@@ -841,22 +841,26 @@ h1 {
 }
 .content .content-inner .archive-detail .category-list .tag-list .archive-list {
   line-height: 28px;
+  padding: 35px;
   list-style: none;
   font-size: 14px;
+  margin: 10px 0px;
+}
+.content .content-inner .archive-detail .category-list-item, .content .content-inner .archive-detail .tag-list-item, .content .content-inner .archive-detail .archive-list-item {
+  display: inline-block;
+}
+.content .content-inner .archive-detail .category-list-item a, .content .content-inner .archive-detail .tag-list-item a, .content .content-inner .archive-detail .archive-list-item a {
+  display: inline-block;
   border: 1px solid #dcdcdc;
   padding: 5px 25px;
   border-radius: 5px;
   margin: 5px 15px;
 }
-.content .content-inner .archive-detail .category-list .tag-list .archive-list:hover {
-  border-color: #142c5d;
-}
-.content .content-inner .archive-detail .tag-list-item, .content .content-inner .archive-detail .archive-list-item {
-  display: inline-block;
-  margin: 0 15px;
-}
-.content .content-inner .archive-detail .tag-list-item:before, .content .content-inner .archive-detail .archive-list-item:before {
+.content .content-inner .archive-detail .category-list-item:before, .content .content-inner .archive-detail .tag-list-item:before, .content .content-inner .archive-detail .archive-list-item:before {
   display: none;
+}
+.content .content-inner .archive-detail .category-list-item:hover, .content .content-inner .archive-detail .tag-list-item:hover, .content .content-inner .archive-detail .archive-list-item:hover {
+  border-color: #142c5d;
 }
 .content .content-inner .archive-detail ul, .content .content-inner .archive-detail ol {
   list-style: none;
@@ -876,6 +880,138 @@ h1 {
   margin-right: 10px;
   float: left;
   margin-top: 10px;
+}
+.content .content-inner .category .category-title {
+  color: #696969;
+  font-weight: 300;
+  line-height: 35px;
+  margin: 0px;
+  font-size: 26px;
+  transition: color 0.3s;
+}
+.content .content-inner .category .category-item {
+  margin: 0 auto;
+  position: relative;
+}
+.content .content-inner .category h1 {
+  position: relative;
+  overflow: hidden;
+  font-size: 18px;
+}
+.content .content-inner .category h1 .article-link {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  position: relative;
+  padding: 0 10px 0 0;
+}
+.content .content-inner .category h1 .article-link .title-href {
+  max-width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.content .content-inner .category h1 .article-link:after {
+  content: "";
+  display: block;
+  width: 800px;
+  position: absolute;
+  top: 22px;
+  border-top: 1px solid #eee;
+  left: 100%;
+}
+.content .content-inner .category h1 .post-time {
+  top: 0;
+  right: 0;
+  color: #777;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: absolute;
+  background-color: #fff;
+  padding-left: 10px;
+  max-width: 50%;
+  font-weight: 400;
+  line-height: 43px;
+}
+.content .content-inner .category h1 .articles-tag {
+  font-weight: normal;
+  font-size: 24px;
+  color: #999;
+  background: #eee;
+  padding: 13px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+.content .content-inner .category h1 .articles-tag:hover {
+  opacity: 0.8;
+}
+.content .content-inner .tag-detail .tag-title {
+  color: #696969;
+  font-weight: 300;
+  line-height: 35px;
+  margin: 0px;
+  font-size: 26px;
+  transition: color 0.3s;
+}
+.content .content-inner .tag-detail .tag-item {
+  margin: 0 auto;
+  position: relative;
+}
+.content .content-inner .tag-detail h1 {
+  position: relative;
+  overflow: hidden;
+  font-size: 18px;
+}
+.content .content-inner .tag-detail h1 .article-link {
+  display: inline-block;
+  vertical-align: baseline;
+  zoom: 1;
+  position: relative;
+  padding: 0 10px 0 0;
+}
+.content .content-inner .tag-detail h1 .article-link .title-href {
+  max-width: 350px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+}
+.content .content-inner .tag-detail h1 .article-link:after {
+  content: "";
+  display: block;
+  width: 800px;
+  position: absolute;
+  top: 22px;
+  border-top: 1px solid #eee;
+  left: 100%;
+}
+.content .content-inner .tag-detail h1 .post-time {
+  top: 0;
+  right: 0;
+  color: #777;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  position: absolute;
+  background-color: #fff;
+  padding-left: 10px;
+  max-width: 50%;
+  font-weight: 400;
+  line-height: 43px;
+}
+.content .content-inner .tag-detail h1 .articles-tag {
+  font-weight: normal;
+  font-size: 24px;
+  color: #999;
+  background: #eee;
+  padding: 13px;
+  border-radius: 50%;
+  vertical-align: top;
+}
+.content .content-inner .tag-detail h1 .articles-tag:hover {
+  opacity: 0.8;
 }
 
 @media (max-width: 860px) {

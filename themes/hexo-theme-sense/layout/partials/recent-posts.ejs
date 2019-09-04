@@ -3,7 +3,7 @@
   <div class="recent-posts">
     <% page.posts.sort('date', -1).limit(10).each(function(post, index) { %>
       <div class="recent-post-item">
-        <% if(is_home() && index == 0){%>
+        <% if(is_home() && page.current == 1 && index == 0){%>
           <i class="iconfont new-article-tag">&#xe6e3;</i>
         <% }%>
         <h1>

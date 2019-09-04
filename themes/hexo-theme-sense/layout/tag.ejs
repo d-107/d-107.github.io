@@ -1,20 +1,18 @@
 
-<div id="tag" class="tag-detail">
+<div class="tag-detail">
   <h1 class="tag-title"><%=page.tag%></h1>
   <% page.posts.each(function(article) { %>
     <div class="tag-item">
-      <% if (article.link) { %>
-        <a href="<%=url_for(article.link)%>" target="_blank">
-          <%=article.title || 'No Title'%>
-        </a>
-      <% } else { %>
-        <a href="<%=url_for(article.link)%>">
-          <%=article.title || 'No Title'%>
-        </a>
-      <% } %>
-      <time datetime="<%=date_xml(article.date)%>">
-        <%=date(article.date)%>
-      </time>
+        <h1>
+              <span class="article-link">
+                <i class="iconfont articles-tag">&#xe633;</i>
+                <a class="title-href" href="<%= url_for(article.path) %>"
+                   title="<%= article.title || 'No Title' %>"><%= article.title || 'No Title' %></a>
+              </span>
+            <time class="post-time" datetime="<%= date_xml(article.date) %>">
+                <%= date(article.date) %>
+            </time>
+        </h1>
     </div>
   <% }); %>
 </div>
