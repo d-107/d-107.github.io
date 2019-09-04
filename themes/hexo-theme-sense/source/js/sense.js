@@ -100,12 +100,12 @@ $(function () {
           index = article.index;
         }
       }
-      if (index > 0) {
+      if (index >= 0) {
         //console.log(article);
         arr.push(index);
       }
     }
-    if (arr.length >= 0) {
+    if (arr.length > 0) {
       for (let i = 0; i < lists.length; i++) {
         if (arr.indexOf(i) >= 0) {
           $(lists[i]).removeClass('hide');
