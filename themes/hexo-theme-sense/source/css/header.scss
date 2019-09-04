@@ -7,14 +7,14 @@
   z-index: 9999;
   display: block;
   &:before {
-    background: linear-gradient(to right, #07338e, #142c5d);
+    background: linear-gradient(to right, #a0cfe4,#e8c37e);
     content: "";
     display: block;
     height: 100%;
     position: absolute;
     top: 0;
     left: 0;
-    opacity: 1;
+    opacity: .5;
     width: 100%;
     z-index: -100;
     transition: all .5s ease;
@@ -112,7 +112,7 @@
 
 .header-bg{
   &:before{
-    opacity: .5;
+    opacity: 1;
   }
 }
 @media (max-width: 860px) {
@@ -123,7 +123,7 @@
     right: 0;
     top: 0;
     z-index: 9999;
-    background: linear-gradient(to right, #07338e, #142c5d);
+    background: linear-gradient(to right, #a0cfe4,#e8c37e);
     text-align: center;
   }
 }

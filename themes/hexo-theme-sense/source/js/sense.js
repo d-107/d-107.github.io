@@ -105,7 +105,7 @@ $(function () {
         arr.push(index);
       }
     }
-    if (arr.length > 0) {
+    if (arr.length >= 0) {
       for (let i = 0; i < lists.length; i++) {
         if (arr.indexOf(i) >= 0) {
           $(lists[i]).removeClass('hide');
