@@ -7,12 +7,12 @@ tags: net core
 ### 前言
 昨天是写着写着发现，时间不早了，已经养成了晚上下班抽时间看看能写点儿啥的习惯（貌似），今天实在是不想让昨天没做完的事情影响，所以又坐下，沉下心（周末了），开始把数据库这块儿的补充完整。
 
-昨天已经介绍过大部分的东西，包括方法封装也是基本的展示了下，实际上应该先介绍这一篇，从怎么用来引导封装类库，但是既然写都写出来了就不想再调整了，今天就主要说下怎么实际使用方法吧，需要查看具体使用的类库可查看[net core Webapi基础工程搭建（六）——数据库操作_Part 1](/2019/07/18/net-core-Webapi基础工程搭建（六）——数据库操作-Part-1/)。（懒的不能行）
+昨天已经介绍过大部分的东西，包括方法封装也是基本的展示了下，实际上应该先介绍这一篇，从怎么用来引导封装类库，但是既然写都写出来了就不想再调整了，今天就主要说下怎么实际使用方法吧，需要查看具体使用的类库可查看[net core Webapi基础工程搭建（六）——数据库操作_Part 1](/2019/07/18/net-core-sqlsugar-1/)。（懒的不能行）
 
 ### 开始
 闲话不多说，Service层搞起，新建两个文件夹，一个**Interfaces**，一个**Implements**，另外顺带新建个**Common**的文件夹，把上一篇的三个类放进去（纯粹是看的，归类，放不放不影响使用）。
 
-![Service](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/1.png)
+![Service](net-core-sqlsugar-2/1.png)
 上一篇我们创建了一个StudentEntity这个对象，忘了的朋友可以去看下。
 新建一个**IStudentService**接口，继承IBaseService
 ```csharp
@@ -48,6 +48,7 @@ tags: net core
 ```
 
 对于依赖注入，这里简短穿插几句，后续有新的感受会再补充。
+
 | 方法 |  说明 |
 |--|--|
 | Transient | 每一次调用都会创建一个新的实例 |
@@ -115,10 +116,10 @@ tags: net core
 ```
 
 然后我们来修改BaseService当时留的连接串信息。
-![BaseService](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/2.png)
+![BaseService](net-core-sqlsugar-2/2.png)
 创建表结构，这里说明下，不是说非要创建，毕竟SqlSugar有CodeFirst（当然也有DbFirst），需要的朋友可去文档查看，也比较简单，在程序启动的时候来判断是否有表，或者专门做个接口做初始化操作也可以，下图做用法简介，具体还是查看文档吧，毕竟还有备份啊改列名什么的。
-![说明](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/3.png)
-![mysql](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/4.png)
+![说明](net-core-sqlsugar-2/3.png)
+![mysql](net-core-sqlsugar-2/4.png)
 
 万事具备，之前Values这个挨千刀的东风，构造函数来获取IStudentService这个接口。
 
@@ -150,7 +151,7 @@ tags: net core
             return new string[] { "value1", "value2" };
         }
 ```
-![插入](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/5.png)
+![插入](net-core-sqlsugar-2/5.png)
 - **修改**
 这里刚好也演示下SqlFilterEntity这个自己写的方法的用法，并且扩展了下实体的方法，方便使用。
 
@@ -215,12 +216,12 @@ tags: net core
             }
 	
 ```
-![修改](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/6.png)
+![修改](net-core-sqlsugar-2/6.png)
 
 - **删除**
 删除这个不多说，就是把修改的换个方法。
-![删除](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/7.png)
-![删除](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/8.png)
+![删除](net-core-sqlsugar-2/7.png)
+![删除](net-core-sqlsugar-2/8.png)
 
 - **查看**
 
@@ -242,7 +243,7 @@ tags: net core
             return value;
         }
 ```
-![查看](net-core-Webapi基础工程搭建（六）——数据库操作-Part-2/9.png)
+![查看](net-core-sqlsugar-2/9.png)
 
 ### 小结
 

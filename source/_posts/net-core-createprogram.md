@@ -5,19 +5,19 @@ tags: net core
 ---
 
 ### 前言
-前面介绍了开发工具及net core版本，后端工程的框架结构[开发工具及环境](/2019/07/02/net-core-Webapi基础工程搭建（一）——开发工具及环境/)，因为是基础工程，所以没考虑太复杂的框架，如果有架构师请勿喷。
+前面介绍了开发工具及net core版本，后端工程的框架结构[开发工具及环境](/2019/07/02/net-core-tools-and-environment/)，因为是基础工程，所以没考虑太复杂的框架，如果有架构师请勿喷。
 
 ### 创建工程
 废话不多说，撸起袖子干。
 打开vs2019，左上角->文件->新建->项目
-![新建](net-core-Webapi基础工程搭建（二）——创建工程/1.png)
+![新建](net-core-createprogram/1.png)
 一般不需要检索，毕竟就几个，找到这个Web 应用程序，点击下一步。
-![新建](net-core-Webapi基础工程搭建（二）——创建工程/2.png)
+![新建](net-core-createprogram/2.png)
 自己起个名字，选个路径，点击创建。
-![新建](net-core-Webapi基础工程搭建（二）——创建工程/3.png)
+![新建](net-core-createprogram/3.png)
 基本上该标注的都标注了，启用HTTPS这个看自己需要，勾选了之后就可以通过https://访问，至于Docker支持这个，先挖个坑，后面鼓捣Docker的时候专门介绍，其实个人感觉跨平台主要得力于Docker这个说是虚拟机也不算，说是服务器也不算的工具。
 创建完成后基本上都可以看到这个工程的大概东西了。
-![新建](net-core-Webapi基础工程搭建（二）——创建工程/4.png)
+![新建](net-core-createprogram/4.png)
 ### 工程文件概述（个人理解）
 - **Properties**
 这下面有个launchSettings.json，这是个系统配置文件，iis的端口，请求地址，默认地址等等的配置。
@@ -29,7 +29,7 @@ tags: net core
 入口文件，没啥说的，我鼓捣的也不多，说实话做了一个工程这个地方貌似没改动，这个地方可以选择使用哪个Startup（如果你有多个的话）。
 - **Startup.cs**
 这个文件就比较厉害了，后续做的Log，Swagger等等第三方类库或者其他有些配置还有你的Service，都需要（有些是最好）在这个文件下注册，先切出代码看下。
-![Startup.cs](net-core-Webapi基础工程搭建（二）——创建工程/5.png)
+![Startup.cs](net-core-createprogram/5.png)
 - Startup
 ```csharp
 		public Startup(IConfiguration configuration)

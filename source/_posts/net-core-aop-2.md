@@ -11,7 +11,7 @@ tags: net core
 
 ### 引入
 首先，我们在Util层直接引入相关的类库。
-![引入](net-core-Webapi基础工程搭建（七）——小试AOP及常规测试-Part-2/1.png)
+![引入](net-core-aop-2/1.png)
 然后我们还是先在Startup注册下，将ConfigureServices方法从void更改为IServiceProvider，目的就是，这个管道给别人了，不再由默认的来了。
 ```csharp
 	public IServiceProvider ConfigureServices(IServiceCollection services)
@@ -84,11 +84,11 @@ StudentService我们来实现这个方法。
 }
 ```
 
-![测试](net-core-Webapi基础工程搭建（七）——小试AOP及常规测试-Part-2/2.png)
+![测试](net-core-aop-2/2.png)
 运行没问题，我们来看下日志记录。
-![日志](net-core-Webapi基础工程搭建（七）——小试AOP及常规测试-Part-2/3.png)
+![日志](net-core-aop-2/3.png)
 另外也补充下这个记录的问题，如果需要监视接口调用的情况，我们可以加上断点看下这个context，这个对象里面本身已经包含了我们调用了哪个接口的哪个方法等等信息，这里只举个简单的例子，我们可以知道我们调用的接口及方法，包括实现及方法，然后可以记录下是谁访问，哪个接口，执行时间等等。
-![示例](net-core-Webapi基础工程搭建（七）——小试AOP及常规测试-Part-2/4.png)
+![示例](net-core-aop-2/4.png)
 
 ### 小结
 写到这里，net core webapi的基础工程基本上已经完工了，通过这些记录我本身又对之前的工程进行了小量的改动，每次的一版写完都有一个新的感受，可能当时写一版的时候没有想太多，一遍一遍的过完之后发现有些地方可以优化，并且优化的效果也是挺明显，后续如果有新的功能实现或者业务需要的时候，也会同步更新的这个示例工程。

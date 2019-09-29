@@ -16,7 +16,7 @@ Cache在项目工程中使用的范围还是挺广泛的：
 - 其他，自己看着办吧
 
 首先，引入**Microsoft.Extensions.Caching.Memory**
-![Cache](net-core-Webapi基础工程搭建（五）——缓存机制/1.png)
+![Cache](net-core-cache/1.png)
 这里我直接在Util引入，前面已经讲了，一个工程引入第三方，其他工程引入项目工程即可使用对应第三方类库。
 引入完成后，我们就开始来使用这个MemoryCache吧。
 ```csharp
@@ -71,18 +71,18 @@ Cache在项目工程中使用的范围还是挺广泛的：
 
 补个测试效果，写到Session才想起来，唉，果然写东西不能让打断，-,-||。
 
-![Values](net-core-Webapi基础工程搭建（五）——缓存机制/2.png)
+![Values](net-core-cache/2.png)
 
-![Cache测试](net-core-Webapi基础工程搭建（五）——缓存机制/3.png)
+![Cache测试](net-core-cache/3.png)
 注意观察时间，一段时间后Cache过期销毁。
-![Cache测试](net-core-Webapi基础工程搭建（五）——缓存机制/4.png)
+![Cache测试](net-core-cache/4.png)
 
 ### Session
 最初鼓捣net core的时候，我确实没有过多关注Session这个会话模式，毕竟只有浏览器才能使用，之前跟别人谈到Session多爽的时候，说道Session其实本质上类似Cookie（当然我也不清楚），因为用户访问后会有个SessionID，有状态的访问会留下Cookie也是情有可原的，如果用户自己整个隐私模式访问，那，再见（你就在登录界面循环往复吧）。
 
 在用户登录后，Session存储用户基本登录信息这个是web端常用的手段，毕竟跟浏览器打交道Cookie少不了，对于无状态访问授权的[JWT](https://jwt.io/)也是折腾过，不过还是理解不透彻，统一的授发token的方式还是挺可取的，如果是多服务，多应用，负载均衡的场景，单点登录确实方便，但是我常规会自己生成token来通过Session或者Redis存储，实际效果应该是差不多吧。
 好了，废话不多说，一样是引入**Microsoft.AspNetCore.Session**
-![Session](net-core-Webapi基础工程搭建（五）——缓存机制/5.png)
+![Session](net-core-cache/5.png)
 引入完成后，在Startup.cs注册Session服务。
 ```csharp
         public void ConfigureServices(IServiceCollection services)
@@ -143,9 +143,9 @@ Cache在项目工程中使用的范围还是挺广泛的：
 ```
 我们依然拿这个万恶的ValuesController开刀。
 
-![Values](net-core-Webapi基础工程搭建（五）——缓存机制/6.png)
+![Values](net-core-cache/6.png)
 运行后，访问这个Values/{id}接口，发现我们的Session值已经获取到了。
-![数据](net-core-Webapi基础工程搭建（五）——缓存机制/7.png)
+![数据](net-core-cache/7.png)
 
 HttpContext这个对象，可以通过IServiceProvider来获取，这样方便调用统一维护。
 新建AprilConfig类文件，代码如下：
@@ -167,9 +167,9 @@ HttpContext这个对象，可以通过IServiceProvider来获取，这样方便�
 ```
 
 写好后我们需要回到Startup.cs，给IserviceProvider赋值。
-![Startup](net-core-Webapi基础工程搭建（五）——缓存机制/8.png)
+![Startup](net-core-cache/8.png)
 SessionUtil代码修改调整，不需要再传HttpContext这个参数。
-![SessionUtil](net-core-Webapi基础工程搭建（五）——缓存机制/9.png)
+![SessionUtil](net-core-cache/9.png)
 这样少传一个是一个，后续用到HttpContext这个上下文的时候，也不用考虑啥了，直接**AprilConfig.HttpCurrent**走起。
 
 ### Cookie
@@ -223,9 +223,9 @@ public class CookieUtil
 ```
 
 写好之后，老规矩ValuesController走一波。
-![Values](net-core-Webapi基础工程搭建（五）——缓存机制/10.png)
+![Values](net-core-cache/10.png)
 测试结果：
-![测试结果](net-core-Webapi基础工程搭建（五）——缓存机制/11.png)
+![测试结果](net-core-cache/11.png)
 
 ### 小结
 从创建工程到在线文档，日志管理，缓存机制基本上走了一遍了，下一步，就是数据层的操作，一个工程管理肯定少不了数据的支撑，总不能每次都自己YY数据吧，下一节，**数据库操作**。
