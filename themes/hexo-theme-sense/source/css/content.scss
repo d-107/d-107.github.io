@@ -519,6 +519,11 @@
   }
 }
 
+@media (max-width: 1200px) {
+  .article-toc{
+    display: none;
+  }
+}
 @media (max-width: 860px) {
   .content .content-inner {
     max-width: 80%;
@@ -550,7 +555,5 @@
     }
   }
 
-  .article-toc{
-    display: none;
-  }
+
 }

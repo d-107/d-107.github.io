@@ -604,7 +604,7 @@ h1 {
   bottom: 0;
   left: 0;
   right: 0;
-  background-color: rgba(255, 255, 255, 0.4);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 .video-box .video .video-inner, .video-box .video .video-inner a {
   color: #fff;
@@ -1120,6 +1120,11 @@ h1 {
   clear: both;
 }
 
+@media (max-width: 1200px) {
+  .article-toc {
+    display: none;
+  }
+}
 @media (max-width: 860px) {
   .content .content-inner {
     max-width: 80%;
@@ -1140,10 +1145,6 @@ h1 {
     max-width: 180px;
   }
   .content .content-inner #article-nav .article-nav-link-wrap {
-    display: none;
-  }
-
-  .article-toc {
     display: none;
   }
 }

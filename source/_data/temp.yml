@@ -76,7 +76,7 @@ scripts:
   - /js/image-view.js
 
 # 樱花飘落效果
-sakura: true
+sakura: false
 # 雪花效果
 snow: false
 # 点击爆炸效果
