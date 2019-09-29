@@ -4,9 +4,11 @@
     <h1 class="article-title"><%=page.title%></h1>
   </header>
 
-  <div class="article-entry">
+  <div class="article-entry" style="border-bottom:1px solid #dcdcdc;margin-bottom: 45px;">
     <%-page.content%>
   </div>
 </article>
+
+<%- partial('partials/comment') %>
 
 <%-paginator()%>

@@ -86,7 +86,6 @@
 
     .article-detail {
       margin-top: 160px;
-      position: relative;
       blockquote {
         background: #ddd;
         border-left: 5px solid #ccc;
@@ -110,7 +109,7 @@
           font-weight: 300;
           line-height: 35px;
           margin: 0px;
-          font-size: 26px;
+          font-size: 24px;
           transition: color .3s;
         }
       }
@@ -179,10 +178,6 @@
             -webkit-transition: color 0.3s;
             -o-transition: color 0.3s;
             transition: color 0.3s;
-            max-width: 200px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
           }
         }
       }
@@ -480,26 +475,47 @@
     }
 
     .article-toc {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      margin-right: -120px;
-      line-height: 30px;
+      position: fixed;
+      top: 30vh;
+      right: -1800px;
+      transition: all .5s ease;
+      -webkit-transition: all .5s ease;
+      -ms-transition: all .5s ease;
+      transition: all .5s ease;
+    }
+    .article-toc-show{
+      right: 180px;
+    }
+    .toc{
+      width: 250px;
+      overflow: hidden;
     }
 
-    .article-toc-inner {
-      float: right;
-      position: fixed;
+    .toc-item{
+      .toc-link{
+        display: block;
+        line-height: 32px;
+      }
+    }
+    .toc-text{
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: block;
+      white-space: nowrap;
     }
 
     .sidebar-title {
-      margin-top: 20px;
       font-weight: 300;
       color: #574C4C;
-      padding-bottom: 5px;
       font-size: 20px;
+      margin-bottom: 15px;
+      display: inline-block;
     }
 
+  }
+  #container{
+    clear: both;
   }
 }
 
@@ -528,5 +544,13 @@
         }
       }
     }
+
+    #article-nav .article-nav-link-wrap{
+      display: none;
+    }
+  }
+
+  .article-toc{
+    display: none;
   }
 }

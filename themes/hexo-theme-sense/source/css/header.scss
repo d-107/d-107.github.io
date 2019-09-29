@@ -110,6 +110,10 @@
   }
 }
 
+.box-shadow{
+  box-shadow: rgba(0, 0, 0, 0.5) 0px 1px 40px -8px;
+}
+
 .header-bg{
   &:before{
     opacity: 1;
@@ -123,7 +127,7 @@
     right: 0;
     top: 0;
     z-index: 9999;
-    background: linear-gradient(to right, #a0cfe4,#e8c37e);
+    background: linear-gradient(200deg, #e8c37e,#a0cfe4);
     text-align: center;
   }
 }
