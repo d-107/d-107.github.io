@@ -216,6 +216,38 @@
   font-size: 14px;
 }
 
+.content .content-inner .article-detail .article-entry figure table {
+  border: none;
+  margin: 0 !important;
+  border-width: 0;
+  overflow: auto;
+  margin-bottom: 0;
+  position: relative;
+  width: auto;
+  margin: 0;
+  background-color: #272822;
+  color: none;
+  border-collapse: none;
+  border-spacing: 0;
+  box-sizing: border-box;
+}
+
+.content .content-inner .article-detail .article-entry figure table tbody tr:hover {
+  background-color: #272822;
+}
+
+.content .content-inner .article-detail .article-entry figure table tbody tr:nth-child(even) {
+  background-color: none;
+}
+
+.content .content-inner .article-detail .article-entry figure table tbody td {
+  border: none;
+}
+
+.content .content-inner .article-detail .article-entry figure table tbody tb:last {
+  border: none;
+}
+
 .content .content-inner .article-detail #article-nav {
   padding: 20px 32px 10px;
   min-height: 30px;

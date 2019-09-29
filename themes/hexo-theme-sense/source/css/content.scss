@@ -212,6 +212,38 @@
             font-size: 14px;
           }
         }
+        
+        figure table {
+          border: none;
+          margin: 0 !important;
+          border-width: 0;
+          overflow: auto;
+          margin-bottom: 0;
+          position: relative;
+          width: auto;
+          margin: 0;
+          background-color:#272822;
+          color: none;
+          border-collapse: none;
+          border-spacing: 0;
+          box-sizing: border-box;
+
+          tbody tr:hover {
+            background-color: #272822;
+          }
+
+          tbody tr:nth-child(even) {
+            background-color: none;
+          }
+
+          tbody td {
+            border: none;
+          }
+
+          tbody tb:last {
+            border: none;
+          }
+        }
       }
 
       #article-nav {
