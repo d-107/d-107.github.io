@@ -1,8 +1,8 @@
 ---
 title: Linux配置部署_新手向（一）——CentOS系统安装
 date: 2019-08-21 13:48:19
-tags: [vmware]
-categories: 新手向
+tags: [vmware,新手向]
+categories: AprilBlank
 ---
 
 ### 前言

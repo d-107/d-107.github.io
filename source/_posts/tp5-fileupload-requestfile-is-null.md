@@ -1,8 +1,8 @@
 ---
 title: tp5文件上传$_FILES有值request中file却为空
 date: 2019-07-11 14:43:56
-tags: php
-categories: 问题记录
+tags: [php,问题记录]
+categories: AprilBlank
 ---
 
 ### 前言

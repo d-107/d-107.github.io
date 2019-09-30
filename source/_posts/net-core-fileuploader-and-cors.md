@@ -2,6 +2,7 @@
 title: net core WebApi——文件分片上传与跨域请求处理
 date: 2019-08-23 13:30:12
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

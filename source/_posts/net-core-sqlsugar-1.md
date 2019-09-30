@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（六）——数据库操作_Part 1
 date: 2019-07-18 19:31:41
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

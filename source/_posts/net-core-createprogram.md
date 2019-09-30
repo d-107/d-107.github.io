@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（二）——创建工程
 date: 2019-07-02 18:16:23
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

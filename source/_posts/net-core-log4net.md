@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（四）——日志功能log4net
 date: 2019-07-04 15:56:02
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

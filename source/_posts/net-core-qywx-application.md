@@ -2,6 +2,7 @@
 title: net core WebApi——尝试企业微信来开发企业内部应用
 date: 2019-09-02 16:37:06
 tags: net core
+categories: AprilBlank
 ---
 
 

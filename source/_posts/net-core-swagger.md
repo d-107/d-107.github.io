@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（三）——在线接口文档Swagger
 date: 2019-07-02 18:51:48
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

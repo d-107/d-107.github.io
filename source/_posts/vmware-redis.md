@@ -1,8 +1,8 @@
 ---
 title: Linux配置部署_新手向（四）——Redis安装与配置
 date: 2019-09-12 17:40:48
-tags: [vmware]
-categories: 新手向
+tags: [vmware,新手向]
+categories: AprilBlank
 ---
 ### 前言
 配置完mysql之后，我们来紧接着安装redis，毕竟这些不用太多的思考，就是命令执行，配置文件，连接测试。

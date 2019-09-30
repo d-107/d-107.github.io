@@ -2,6 +2,7 @@
 title: net core WebApi——缓存神器Redis
 date: 2019-09-23 09:48:56
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

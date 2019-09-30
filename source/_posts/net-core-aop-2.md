@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2
 date: 2019-08-01 11:18:22
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

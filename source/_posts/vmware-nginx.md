@@ -1,8 +1,8 @@
 ---
 title: Linux配置部署_新手向（二）——Nginx安装与配置
 date: 2019-08-21 15:08:18
-tags: [vmware]
-categories: 新手向
+tags: [vmware,新手向]
+categories: AprilBlank
 ---
 
 ### 前言

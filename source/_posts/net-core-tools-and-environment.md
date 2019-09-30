@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（一）——开发工具及环境
 date: 2019-07-02 17:29:33
 tags: net core
+categories: AprilBlank
 ---
 
 ### 开发工具

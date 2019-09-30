@@ -2,6 +2,7 @@
 title: net core Webapi基础工程搭建（五）——缓存机制
 date: 2019-07-10 13:46:17
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言

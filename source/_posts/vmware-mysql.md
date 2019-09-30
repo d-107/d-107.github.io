@@ -1,8 +1,8 @@
 ---
 title: Linux配置部署_新手向（三）——MySql安装与配置
 date: 2019-09-12 15:38:58
-tags: [vmware]
-categories: 新手向
+tags: [vmware,新手向]
+categories: AprilBlank
 ---
 
 ### 前言

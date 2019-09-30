@@ -2,6 +2,7 @@
 title: net core WebApi——文件分片下载
 date: 2019-08-27 16:11:43
 tags: net core
+categories: AprilBlank
 ---
 
 ### 前言
