@@ -3,7 +3,7 @@
 language: zh-CN
 
 # site info
-description: D-107 3wly 项目开发组自留地
+description: 3wly 项目开发组自留地
 keywords: d-107,m-finder,3wly,blank,技术博客,技术分享
 # main menu navigation
 menu:
@@ -48,7 +48,7 @@ friends:
 gitment:
   enable: false
   lazy: false
-  admins: 
+  admins:
     - "'m-finder'"
     - "'AprilBlank'"
   github_user: d-107
@@ -63,7 +63,7 @@ valine:
   appKey: egs7BlX8kO6FuIdaXxDvhe07
   notify: false
   verify: false
-  placeholder:  '来啊，快活啊 (๑•ᴗ•๑)' 
+  placeholder:  '来啊，快活啊 (๑•ᴗ•๑)'
 
 # stylesheets loaded in the <head>
 stylesheets:
