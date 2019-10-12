@@ -2,7 +2,7 @@
 title: laravel 队列学习
 date: 2019-04-09 23:00:00
 tags: laravel
-categories: laravel
+categories: 南瓜
 ---
 
 学习下 laravel 的队列系统。
