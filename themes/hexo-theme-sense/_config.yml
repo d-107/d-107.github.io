@@ -79,3 +79,5 @@ sakura: true
 snow: false
 # 点击爆炸效果
 firework: true
+# 访问量统计
+traffic: true

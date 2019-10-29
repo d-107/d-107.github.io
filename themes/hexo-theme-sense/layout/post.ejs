@@ -6,7 +6,11 @@
     <div class="article-entry">
         <%- page.content %>
     </div>
-
+    <% if(theme.traffic){%>
+    <div>
+        <a id="busuanzi_value_page_pv" class="article-nav-link-wrap"></a>
+    </div>
+    <% }%>
     <% if (page.prev || page.next){ %>
         <nav id="article-nav">
             <% if (page.prev){ %>
