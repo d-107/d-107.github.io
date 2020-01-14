@@ -1,6 +1,6 @@
 
 ---
-title: win10子系统（wsl1）运行laradock
+title: win10 子系统（wsl1）运行laradock
 date: 2020-01-14 12:21:00
 tags: docker
 categories: 南瓜
@@ -22,7 +22,7 @@ categories: 南瓜
 
 #### 配置 docker
 [官网配置手册]([https://docs.docker.com/install/linux/docker-ce/ubuntu/](https://docs.docker.com/install/linux/docker-ce/ubuntu/)
-)
+
 
 先卸载旧版docker：
 ```
