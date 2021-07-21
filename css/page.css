@@ -1,0 +1,41 @@
+.page-number, .space, .next {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 -1px 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 12px;
+  border: 1px solid #e2e2e2;
+}
+
+.page-number, .space, .prev {
+  display: inline-block;
+  *display: inline;
+  *zoom: 1;
+  vertical-align: middle;
+  padding: 0 15px;
+  height: 28px;
+  line-height: 28px;
+  margin: 0 -1px 5px 0;
+  background-color: #fff;
+  color: #333;
+  font-size: 12px;
+  border: 1px solid #e2e2e2;
+}
+
+.space {
+  cursor: not-allowed !important;
+  color: #d2d2d2 !important;
+}
+
+.current {
+  color: #fff;
+  background-color: #142c5d;
+  border: 1px solid #142c5d;
+  cursor: not-allowed !important;
+}
