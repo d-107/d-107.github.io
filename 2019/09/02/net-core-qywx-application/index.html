@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言这几天忙活着别的东西，耽误了很长时间，从文件操作完了之后就在考虑着下一步鼓捣点儿啥，因为最开始的业务开发就是企业微信相关的，这刚好来做个内部应用的小例子玩玩。 企业微信前身是企业号，当时微信主推的还是公众号与服务号，后续战略考虑到企业的OA了（当然还是跟某个抢市场），企业号应该是在16年还是具体啥时候出的，刚出的时候也是问题不断一直在修复更新，最近这两年基本上没咋关注企业微信了，也都是偶尔上去">
+<meta name="keywords" content="net core">
+<meta property="og:type" content="article">
+<meta property="og:title" content="net core WebApi——尝试企业微信来开发企业内部应用">
+<meta property="og:url" content="http://yoursite.com/2019/09/02/net-core-qywx-application/index.html">
+<meta property="og:site_name" content="D-107">
+<meta property="og:description" content="前言这几天忙活着别的东西，耽误了很长时间，从文件操作完了之后就在考虑着下一步鼓捣点儿啥，因为最开始的业务开发就是企业微信相关的，这刚好来做个内部应用的小例子玩玩。 企业微信前身是企业号，当时微信主推的还是公众号与服务号，后续战略考虑到企业的OA了（当然还是跟某个抢市场），企业号应该是在16年还是具体啥时候出的，刚出的时候也是问题不断一直在修复更新，最近这两年基本上没咋关注企业微信了，也都是偶尔上去">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/5.png">
+<meta property="og:updated_time" content="2022-04-23T16:36:29.424Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="net core WebApi——尝试企业微信来开发企业内部应用">
+<meta name="twitter:description" content="前言这几天忙活着别的东西，耽误了很长时间，从文件操作完了之后就在考虑着下一步鼓捣点儿啥，因为最开始的业务开发就是企业微信相关的，这刚好来做个内部应用的小例子玩玩。 企业微信前身是企业号，当时微信主推的还是公众号与服务号，后续战略考虑到企业的OA了（当然还是跟某个抢市场），企业号应该是在16年还是具体啥时候出的，刚出的时候也是问题不断一直在修复更新，最近这两年基本上没咋关注企业微信了，也都是偶尔上去">
+<meta name="twitter:image" content="http://yoursite.com/2019/09/02/net-core-qywx-application/1.png">
+    <title>net core WebApi——尝试企业微信来开发企业内部应用 | D-107 | 3wly 项目开发组自留地</title>
+    <link rel="icon shortcut" type="image/ico" href="/images/favicon.ico">
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/sense.css">
+        
+    
+</head>
+
+
+<body>
+<a id="go-top" class="go-top faa-float animated"></a>
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            
+                <img src="/images/d-107.png" class="logo"/>
+            
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            
+                <li class="nav-link">
+                    <a href="/">
+                        首页
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/archives">
+                        归档
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/about">
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</header>
+
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
+        </div>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/">D-107</a></h1>
+            <p class="site-desc">3wly 项目开发组自留地</p>
+            <p class="social">
+                
+                    <a class="github" target="_blank" href="https://github.com/d-107" title="github"><i class="icon-github"></i></a>
+                
+                    <a class="qq" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d" title="qq"><i class="icon-qq"></i></a>
+                
+                    <a class="mail" target="_blank" href="mailto:m@m-finder.com" title="mail"><i class="icon-mail"></i></a>
+                
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            
+                <ul id="search-tags" data-count="11">
+                    
+                        <li data-url="/tags/test/" >test</li>
+                    
+                        <li data-url="/tags/闲言碎语/" >闲言碎语</li>
+                    
+                        <li data-url="/tags/laravel/" >laravel</li>
+                    
+                        <li data-url="/tags/swoole/" >swoole</li>
+                    
+                        <li data-url="/tags/docker/" >docker</li>
+                    
+                        <li data-url="/tags/net-core/" >net core</li>
+                    
+                        <li data-url="/tags/php/" >php</li>
+                    
+                        <li data-url="/tags/问题记录/" >问题记录</li>
+                    
+                        <li data-url="/tags/vue/" >vue</li>
+                    
+                        <li data-url="/tags/vmware/" >vmware</li>
+                    
+                        <li data-url="/tags/新手向/" >新手向</li>
+                    
+                </ul>
+            
+
+            <ul id="search-articles">
+                
+                    <li data-url="/2020/01/16/wsl2-laradock/" data-date="2020-01-16"
+                        data-name="win10 子系统（wsl2）运行laradock" class="search-article hide">
+                        <a href="/2020/01/16/wsl2-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl2）运行laradock</a>
+                        <span class="post-time">2020-01-16</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2020/01/14/wsl-laradock/" data-date="2020-01-14"
+                        data-name="win10 子系统（wsl1）运行 laradock" class="search-article hide">
+                        <a href="/2020/01/14/wsl-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl1）运行 laradock</a>
+                        <span class="post-time">2020-01-14</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/10/net-core-april-util-update-1/" data-date="2019-11-10"
+                        data-name="net core WebApi——April.Util更新之权限" class="search-article hide">
+                        <a href="/2019/11/10/net-core-april-util-update-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——April.Util更新之权限</a>
+                        <span class="post-time">2019-11-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/07/net-core-april-util/" data-date="2019-11-07"
+                        data-name="net core WebApi——公用库April.Util公开及发布" class="search-article hide">
+                        <a href="/2019/11/07/net-core-april-util/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——公用库April.Util公开及发布</a>
+                        <span class="post-time">2019-11-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/05/net-core-unittest/" data-date="2019-11-05"
+                        data-name="net core WebApi——使用xUnits来实现单元测试" class="search-article hide">
+                        <a href="/2019/11/05/net-core-unittest/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用xUnits来实现单元测试</a>
+                        <span class="post-time">2019-11-05</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/29/net-core-v3-publish/" data-date="2019-10-29"
+                        data-name="向net core 3.0进击——多平台项目发布与部署" class="search-article hide">
+                        <a href="/2019/10/29/net-core-v3-publish/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——多平台项目发布与部署</a>
+                        <span class="post-time">2019-10-29</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/laravel-vue-svg/" data-date="2019-10-28"
+                        data-name="在 laravel vue 中使用 svg 图标" class="search-article hide">
+                        <a href="/2019/10/28/laravel-vue-svg/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laravel vue 中使用 svg 图标</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/vmare-docker/" data-date="2019-10-28"
+                        data-name="Linux配置部署_新手向（五）——Docker的安装与使用" class="search-article hide">
+                        <a href="/2019/10/28/vmare-docker/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（五）——Docker的安装与使用</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/24/another-year-1024/" data-date="2019-10-24"
+                        data-name="又是一年1024" class="search-article hide">
+                        <a href="/2019/10/24/another-year-1024/" class="search-article-name"><i class="icon-quo-left icon"></i>又是一年1024</a>
+                        <span class="post-time">2019-10-24</span>
+                        
+                            <span data-url="/tags/闲言碎语/" data-name="闲言碎语" class="search-articles-tag">闲言碎语</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/18/net-core-v3-npoi/" data-date="2019-10-18"
+                        data-name="net core WebApi——使用NPOI导入导出操作" class="search-article hide">
+                        <a href="/2019/10/18/net-core-v3-npoi/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用NPOI导入导出操作</a>
+                        <span class="post-time">2019-10-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/12/laravel-swoole-socket-in-laradock/" data-date="2019-10-12"
+                        data-name="在 laradock 环境中使用 laravel-swoole 的 websocket" class="search-article hide">
+                        <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 的 websocket</a>
+                        <span class="post-time">2019-10-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/09/net-core-v3-april-webapi/" data-date="2019-10-09"
+                        data-name="向net core 3.0进击——April.WebApi从2.2爬到3.0" class="search-article hide">
+                        <a href="/2019/10/09/net-core-v3-april-webapi/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——April.WebApi从2.2爬到3.0</a>
+                        <span class="post-time">2019-10-09</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/07/net-core-v3-swagger/" data-date="2019-10-07"
+                        data-name="向net core 3.0进击——Swagger的改变" class="search-article hide">
+                        <a href="/2019/10/07/net-core-v3-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——Swagger的改变</a>
+                        <span class="post-time">2019-10-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/26/net-core-quartz/" data-date="2019-09-26"
+                        data-name="net core WebApi——定时任务Quartz" class="search-article hide">
+                        <a href="/2019/09/26/net-core-quartz/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——定时任务Quartz</a>
+                        <span class="post-time">2019-09-26</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/23/net-core-redis/" data-date="2019-09-23"
+                        data-name="net core WebApi——缓存神器Redis" class="search-article hide">
+                        <a href="/2019/09/23/net-core-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——缓存神器Redis</a>
+                        <span class="post-time">2019-09-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-redis/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（四）——Redis安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（四）——Redis安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-mysql/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（三）——MySql安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-mysql/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（三）——MySql安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/04/Hello-Dotnet/" data-date="2019-09-04"
+                        data-name="Hello Dotnet" class="search-article hide">
+                        <a href="/2019/09/04/Hello-Dotnet/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello Dotnet</a>
+                        <span class="post-time">2019-09-04</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/03/hello-php/" data-date="2019-09-03"
+                        data-name="Hello PHP" class="search-article hide">
+                        <a href="/2019/09/03/hello-php/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello PHP</a>
+                        <span class="post-time">2019-09-03</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/02/net-core-qywx-application/" data-date="2019-09-02"
+                        data-name="net core WebApi——尝试企业微信来开发企业内部应用" class="search-article hide">
+                        <a href="/2019/09/02/net-core-qywx-application/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——尝试企业微信来开发企业内部应用</a>
+                        <span class="post-time">2019-09-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/27/net-core-filedownload/" data-date="2019-08-27"
+                        data-name="net core WebApi——文件分片下载" class="search-article hide">
+                        <a href="/2019/08/27/net-core-filedownload/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片下载</a>
+                        <span class="post-time">2019-08-27</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/net-core-fileuploader-and-cors/" data-date="2019-08-23"
+                        data-name="net core WebApi——文件分片上传与跨域请求处理" class="search-article hide">
+                        <a href="/2019/08/23/net-core-fileuploader-and-cors/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片上传与跨域请求处理</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/laravel-swoole-in-laradock/" data-date="2019-08-23"
+                        data-name="在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用" class="search-article hide">
+                        <a href="/2019/08/23/laravel-swoole-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-nginx/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（二）——Nginx安装与配置" class="search-article hide">
+                        <a href="/2019/08/21/vmware-nginx/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（二）——Nginx安装与配置</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-use-centos/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（一）——CentOS系统安装" class="search-article hide">
+                        <a href="/2019/08/21/vmware-use-centos/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（一）——CentOS系统安装</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/02/use-laravel-permission-can-tag-in-vue/" data-date="2019-08-02"
+                        data-name="在vue中使用laravel-permission的@can标签" class="search-article hide">
+                        <a href="/2019/08/02/use-laravel-permission-can-tag-in-vue/" class="search-article-name"><i class="icon-quo-left icon"></i>在vue中使用laravel-permission的@can标签</a>
+                        <span class="post-time">2019-08-02</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/vue/" data-name="vue" class="search-articles-tag">vue</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/01/net-core-aop-2/" data-date="2019-08-01"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2" class="search-article hide">
+                        <a href="/2019/08/01/net-core-aop-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2</a>
+                        <span class="post-time">2019-08-01</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/30/net-core-aop-1/" data-date="2019-07-30"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1" class="search-article hide">
+                        <a href="/2019/07/30/net-core-aop-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>
+                        <span class="post-time">2019-07-30</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-sqlsugar-2/" data-date="2019-07-19"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 2" class="search-article hide">
+                        <a href="/2019/07/19/net-core-sqlsugar-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 2</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-webapi-main/" data-date="2019-07-19"
+                        data-name="net core Webapi 总目录" class="search-article hide">
+                        <a href="/2019/07/19/net-core-webapi-main/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi 总目录</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/18/net-core-sqlsugar-1/" data-date="2019-07-18"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 1" class="search-article hide">
+                        <a href="/2019/07/18/net-core-sqlsugar-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 1</a>
+                        <span class="post-time">2019-07-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/11/tp5-fileupload-requestfile-is-null/" data-date="2019-07-11"
+                        data-name="tp5文件上传$_FILES有值request中file却为空" class="search-article hide">
+                        <a href="/2019/07/11/tp5-fileupload-requestfile-is-null/" class="search-article-name"><i class="icon-quo-left icon"></i>tp5文件上传$_FILES有值request中file却为空</a>
+                        <span class="post-time">2019-07-11</span>
+                        
+                            <span data-url="/tags/php/" data-name="php" class="search-articles-tag">php</span>
+                        
+                            <span data-url="/tags/问题记录/" data-name="问题记录" class="search-articles-tag">问题记录</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/10/net-core-cache/" data-date="2019-07-10"
+                        data-name="net core Webapi基础工程搭建（五）——缓存机制" class="search-article hide">
+                        <a href="/2019/07/10/net-core-cache/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（五）——缓存机制</a>
+                        <span class="post-time">2019-07-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/04/net-core-log4net/" data-date="2019-07-04"
+                        data-name="net core Webapi基础工程搭建（四）——日志功能log4net" class="search-article hide">
+                        <a href="/2019/07/04/net-core-log4net/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（四）——日志功能log4net</a>
+                        <span class="post-time">2019-07-04</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-swagger/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（三）——在线接口文档Swagger" class="search-article hide">
+                        <a href="/2019/07/02/net-core-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（三）——在线接口文档Swagger</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-createprogram/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（二）——创建工程" class="search-article hide">
+                        <a href="/2019/07/02/net-core-createprogram/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（二）——创建工程</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-tools-and-environment/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（一）——开发工具及环境" class="search-article hide">
+                        <a href="/2019/07/02/net-core-tools-and-environment/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（一）——开发工具及环境</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/12/laravel-broadcasting/" data-date="2019-04-12"
+                        data-name="laravel 广播系统学习" class="search-article hide">
+                        <a href="/2019/04/12/laravel-broadcasting/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 广播系统学习</a>
+                        <span class="post-time">2019-04-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/09/laravel-queues/" data-date="2019-04-09"
+                        data-name="laravel 队列学习" class="search-article hide">
+                        <a href="/2019/04/09/laravel-queues/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 队列学习</a>
+                        <span class="post-time">2019-04-09</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/03/laravel-events/" data-date="2019-04-03"
+                        data-name="laravel 事件系统学习" class="search-article hide">
+                        <a href="/2019/04/03/laravel-events/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 事件系统学习</a>
+                        <span class="post-time">2019-04-03</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/03/15/laravel-mix/" data-date="2019-03-15"
+                        data-name="使用 laravel mix 编译资源" class="search-article hide">
+                        <a href="/2019/03/15/laravel-mix/" class="search-article-name"><i class="icon-quo-left icon"></i>使用 laravel mix 编译资源</a>
+                        <span class="post-time">2019-03-15</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2018/02/13/hello-world/" data-date="2018-02-13"
+                        data-name="Hello World" class="search-article hide">
+                        <a href="/2018/02/13/hello-world/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello World</a>
+                        <span class="post-time">2018-02-13</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+  <section class="content-inner">
+    <article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title">net core WebApi——尝试企业微信来开发企业内部应用</h1>
+    </header>
+
+    <div class="article-entry">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>这几天忙活着别的东西，耽误了很长时间，从文件操作完了之后就在考虑着下一步鼓捣点儿啥，因为最开始的业务开发就是企业微信相关的，这刚好来做个内部应用的小例子玩玩。</p>
+<h3 id="企业微信"><a href="#企业微信" class="headerlink" title="企业微信"></a>企业微信</h3><p>前身是企业号，当时微信主推的还是公众号与服务号，后续战略考虑到企业的OA了（当然还是跟某个抢市场），企业号应该是在16年还是具体啥时候出的，刚出的时候也是问题不断一直在修复更新，最近这两年基本上没咋关注企业微信了，也都是偶尔上去看看有没有新东西啊什么的，不过不得不说，在这几年的成长中已经修复逐渐成为一个不错的产品了（大厂的效率还是有的），相对于公众号的开发，为什么我选这个作为例子呢，因为企业微信我可以通过个人来使用（注册的早，现在不清楚注册流程，主要看是否需要企业认证），个人开发者在不论啥时候啥平台都或多或少有些不友好（当然，认证了说明你是个好人，为了信息安全，都懂）。</p>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>注册企业微信的流程我就不多说了，直接说注册完成之后，我们来看下这个界面，标注的就是我们需要的关键参数。<br><img src="/2019/09/02/net-core-qywx-application/1.png" alt="企业微信"><br>记好这个东西之后，我们转到<strong>应用管理</strong>。<br><img src="/2019/09/02/net-core-qywx-application/2.png" alt="企业微信"><br>这个创建就是你添张图片打个名字而已，不多说，创建完成之后我们来看下图的标记。<br><img src="/2019/09/02/net-core-qywx-application/3.png" alt="企业微信"><br>记好这两个参数，OK，下来我们就来看<a href="https://work.weixin.qq.com/api/doc#90000/90003/90487" target="_blank" rel="noopener">API</a>吧，这里我只是介绍下消息推送。<br>微信等相关的第三方开发大致流程都类似，如下：</p>
+<ol>
+<li>注册账号（这不废话么）</li>
+<li>账号认证（为了权限，当然企业微信内部应用不需要）</li>
+<li>服务域名确定好</li>
+<li>AppID、Secret等等的配置（为了accesstoken）</li>
+<li>几乎所有的接口都是先获取accesstoken，相当于你在微信的登录</li>
+<li>根据接口文档来传参啊获取回调啊获取事件等等</li>
+<li>根据返回值来看看错误信息</li>
+</ol>
+<blockquote>
+<p>我这里不做服务端，只是写个示例，需要服务端什么的开发之类的可以给我联系，互相学习。</p>
+</blockquote>
+<p>首先，在我们的<strong>Util</strong>新建一个类<strong>QyThirdUtil</strong>（名字感觉起的好没水平，玩游戏止于起名字，别人都10级了，我还在想名字），先把我们需要的配置信息搞了。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> _CorpID = <span class="keyword">string</span>.Empty;</span><br><span class="line">      <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> _Secret = <span class="keyword">string</span>.Empty;</span><br><span class="line">      <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">string</span> _AgentID = <span class="keyword">string</span>.Empty;</span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 企业微信id</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> CorpID</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">get</span></span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(_CorpID))</span><br><span class="line">              &#123;</span><br><span class="line">                  _CorpID = AprilConfig.Configuration[<span class="string">"QyThird:CorpID"</span>];</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> _CorpID;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 企业微信应用秘钥</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> Secret</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">get</span></span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(_Secret))</span><br><span class="line">              &#123;</span><br><span class="line">                  _Secret = AprilConfig.Configuration[<span class="string">"QyThird:Secret"</span>];</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> _Secret;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 企业微信应用id</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> AgentID</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">get</span></span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(_Secret))</span><br><span class="line">              &#123;</span><br><span class="line">                  _AgentID = AprilConfig.Configuration[<span class="string">"QyThird:AgentID"</span>];</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">return</span> _AgentID;</span><br><span class="line">          &#125;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们来划分下方法，我们需要获取accesstoken，需要执行发送消息的方法。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 获取AccessToken</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">GetAccessToken</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>      &#123;</span><br><span class="line">          QyAccessToken accessToken = <span class="literal">null</span>;</span><br><span class="line">          <span class="keyword">bool</span> isGet = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">if</span> (CacheUtil.Exists(<span class="string">"QyAccessToken"</span>))</span><br><span class="line">          &#123;</span><br><span class="line">              accessToken = CacheUtil.Get&lt;QyAccessToken&gt;(<span class="string">"QyAccessToken"</span>);</span><br><span class="line">              <span class="keyword">if</span> (accessToken.Expire_Time &gt;= DateTime.Now.AddMinutes(<span class="number">1</span>))</span><br><span class="line">              &#123;</span><br><span class="line">                  isGet = <span class="literal">true</span>;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> (!isGet)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">string</span> url = <span class="string">$"https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=<span class="subst">&#123;CorpID&#125;</span>&amp;corpsecret=<span class="subst">&#123;Secret&#125;</span>"</span>;</span><br><span class="line">              <span class="comment">//请求获取</span></span><br><span class="line">              <span class="keyword">string</span> res = RequestUtil.HttpGet(url);</span><br><span class="line">              accessToken = JsonConvert.DeserializeObject&lt;QyAccessToken&gt;(res);</span><br><span class="line">              <span class="keyword">if</span> (accessToken != <span class="literal">null</span> &amp;&amp; accessToken.ErrCode == <span class="number">0</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  accessToken.Expire_Time = DateTime.Now.AddSeconds(accessToken.Expires_In);</span><br><span class="line">                  CacheUtil.Set(<span class="string">"QyAccessToken"</span>, accessToken, <span class="keyword">new</span> TimeSpan(<span class="number">2</span>, <span class="number">0</span>, <span class="number">0</span>));</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">else</span></span><br><span class="line">              &#123;</span><br><span class="line">                  LogUtil.Error(<span class="string">$"获取accesstoken失败——<span class="subst">&#123;accessToken.ErrCode&#125;</span>,<span class="subst">&#123;accessToken.ErrMsg&#125;</span>"</span>);</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> accessToken.Access_Token;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里用到了两个地方，一个是微信端回调的对象实例<strong>QyAccessToken</strong>，需要的朋友可以在源码里cv，我这里就不贴出来了。</p>
+<p>另一个是HttpClient的简单封装请求方法<strong>RequestUtil</strong>，看了有些博客说HttpClient的生命周期之类的，有推荐直接实例化一个私有静态的，也有做工厂模式创建的，没细究，这块儿要多注意下。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RequestUtil</span></span><br><span class="line">   &#123;</span><br><span class="line"></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 发起POST同步请求</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="url"&gt;</span>请求地址<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="postData"&gt;</span>请求数据<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="contentType"&gt;</span>数据类型<span class="doctag">&lt;/param&gt;</span>  </span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="timeOut"&gt;</span>超时时间<span class="doctag">&lt;/param&gt;</span>  </span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">HttpPost</span>(<span class="params"><span class="keyword">string</span> url, <span class="keyword">string</span> postData = <span class="literal">null</span>, <span class="keyword">string</span> contentType = <span class="literal">null</span>, <span class="keyword">int</span> timeOut = <span class="number">30</span></span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(postData))</span><br><span class="line">           &#123;</span><br><span class="line">               postData = <span class="string">""</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">using</span> (HttpClient client = <span class="keyword">new</span> HttpClient())</span><br><span class="line">           &#123;</span><br><span class="line">               client.Timeout = <span class="keyword">new</span> TimeSpan(<span class="number">0</span>, <span class="number">0</span>, timeOut);</span><br><span class="line">               <span class="keyword">using</span> (HttpContent httpContent = <span class="keyword">new</span> StringContent(postData, Encoding.UTF8))</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="keyword">if</span> (contentType != <span class="literal">null</span>)</span><br><span class="line">                       httpContent.Headers.ContentType = <span class="keyword">new</span> System.Net.Http.Headers.MediaTypeHeaderValue(contentType);</span><br><span class="line"></span><br><span class="line">                   HttpResponseMessage response = client.PostAsync(url, httpContent).Result;</span><br><span class="line">                   <span class="keyword">return</span> response.Content.ReadAsStringAsync().Result;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 发起POST异步请求</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="url"&gt;</span>请求地址<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="postData"&gt;</span>请求数据<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="contentType"&gt;</span>数据类型<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="timeOut"&gt;</span>超时时间<span class="doctag">&lt;/param&gt;</span>      </span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">async</span> Task&lt;<span class="keyword">string</span>&gt; <span class="title">HttpPostAsync</span>(<span class="params"><span class="keyword">string</span> url, <span class="keyword">string</span> postData = <span class="literal">null</span>, <span class="keyword">string</span> contentType = <span class="literal">null</span>, <span class="keyword">int</span> timeOut = <span class="number">30</span></span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(postData))</span><br><span class="line">           &#123;</span><br><span class="line">               postData = <span class="string">""</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">using</span> (HttpClient client = <span class="keyword">new</span> HttpClient())</span><br><span class="line">           &#123;</span><br><span class="line">               client.Timeout = <span class="keyword">new</span> TimeSpan(<span class="number">0</span>, <span class="number">0</span>, timeOut);</span><br><span class="line">               <span class="keyword">using</span> (HttpContent httpContent = <span class="keyword">new</span> StringContent(postData, Encoding.UTF8))</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="keyword">if</span> (contentType != <span class="literal">null</span>)</span><br><span class="line">                       httpContent.Headers.ContentType = <span class="keyword">new</span> System.Net.Http.Headers.MediaTypeHeaderValue(contentType);</span><br><span class="line"></span><br><span class="line">                   HttpResponseMessage response = <span class="keyword">await</span> client.PostAsync(url, httpContent);</span><br><span class="line">                   <span class="keyword">return</span> <span class="keyword">await</span> response.Content.ReadAsStringAsync();</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 发起GET同步请求</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="url"&gt;</span>请求地址<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">string</span> <span class="title">HttpGet</span>(<span class="params"><span class="keyword">string</span> url</span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           <span class="keyword">using</span> (HttpClient client = <span class="keyword">new</span> HttpClient())</span><br><span class="line">           &#123;</span><br><span class="line">               <span class="keyword">return</span> client.GetStringAsync(url).Result;</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 发起GET异步请求</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="url"&gt;</span>请求地址<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">async</span> Task&lt;<span class="keyword">string</span>&gt; <span class="title">HttpGetAsync</span>(<span class="params"><span class="keyword">string</span> url</span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           <span class="keyword">using</span> (HttpClient client = <span class="keyword">new</span> HttpClient())</span><br><span class="line">           &#123;</span><br><span class="line">               HttpResponseMessage response = <span class="keyword">await</span> client.GetAsync(url);</span><br><span class="line">               <span class="keyword">return</span> <span class="keyword">await</span> response.Content.ReadAsStringAsync();</span><br><span class="line">           &#125;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我们来写个发送消息的方法<strong>SendMessage</strong>，这里我只写了下普通文本推送。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 消息推送</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="content"&gt;</span>文本内容<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="range"&gt;</span>推送范围<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="messageType"&gt;</span>消息类型<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">      <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">bool</span> <span class="title">SendMessage</span>(<span class="params"><span class="keyword">string</span> content, MessageRange range, AprilEnums.MessageType messageType</span>)</span></span><br><span class="line"><span class="function"></span>      &#123;</span><br><span class="line">          <span class="keyword">bool</span> isSend = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(content) || content.Length &gt; <span class="number">2048</span> || range==<span class="literal">null</span>)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">string</span> accessToken = GetAccessToken();</span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(accessToken))</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">string</span> url = <span class="string">$"https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=<span class="subst">&#123;accessToken&#125;</span>"</span>;</span><br><span class="line">          StringBuilder data = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">          <span class="keyword">bool</span> isVaildRange = <span class="literal">false</span>;</span><br><span class="line">          <span class="keyword">if</span> (range.IsAll)</span><br><span class="line">          &#123;</span><br><span class="line">              data.Append(<span class="string">$"\"touser\":\"@all\""</span>);</span><br><span class="line">              isVaildRange = <span class="literal">true</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">else</span></span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">if</span> (range.Users != <span class="literal">null</span> &amp;&amp; range.Users.Count &gt; <span class="number">0</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  data.AppendFormat(<span class="string">"\"touser\" : &#123;0&#125;"</span>, GetRangeValue(range.Users));</span><br><span class="line">                  isVaildRange = <span class="literal">true</span>;</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              <span class="keyword">if</span> (range.Tags != <span class="literal">null</span> &amp;&amp; range.Tags.Count &gt; <span class="number">0</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="keyword">if</span> (data.Length &gt; <span class="number">0</span>)</span><br><span class="line">                  &#123;</span><br><span class="line">                      data.Append(<span class="string">","</span>);</span><br><span class="line">                  &#125;</span><br><span class="line">                  data.AppendFormat(<span class="string">"\"totag\" : &#123;0&#125;"</span>, GetRangeValue(range.Tags));</span><br><span class="line">                  isVaildRange = <span class="literal">true</span>;</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              <span class="keyword">if</span> (range.Departments != <span class="literal">null</span> &amp;&amp; range.Departments.Count &gt; <span class="number">0</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="keyword">if</span> (data.Length &gt; <span class="number">0</span>)</span><br><span class="line">                  &#123;</span><br><span class="line">                      data.Append(<span class="string">","</span>);</span><br><span class="line">                  &#125;</span><br><span class="line">                  data.AppendFormat(<span class="string">"\"totag\" : &#123;0&#125;"</span>, GetRangeValue(range.Departments));</span><br><span class="line">                  isVaildRange = <span class="literal">true</span>;</span><br><span class="line">              &#125;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> (!isVaildRange)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="comment">//没有发送范围</span></span><br><span class="line">              <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          data.AppendFormat(<span class="string">",\"msgtype\":\"&#123;0&#125;\""</span>, GetMessageType(messageType));</span><br><span class="line">          data.AppendFormat(<span class="string">",\"agentid\":\"&#123;0&#125;\""</span>, AgentID);</span><br><span class="line">          data.Append(<span class="string">",\"text\": &#123;"</span>);</span><br><span class="line">          data.AppendFormat(<span class="string">"\"content\":\"&#123;0&#125;\""</span>, content);</span><br><span class="line">          data.Insert(<span class="number">0</span>, <span class="string">"&#123;"</span>);</span><br><span class="line">          data.Append(<span class="string">"&#125;&#125;"</span>);</span><br><span class="line">          LogUtil.Debug(<span class="string">$"获取到发送消息请求：<span class="subst">&#123;data.ToString()&#125;</span>"</span>);</span><br><span class="line">          <span class="keyword">string</span> res = RequestUtil.HttpPost(url, data.ToString(), <span class="string">"application/json"</span>);</span><br><span class="line">          LogUtil.Debug(<span class="string">$"获取到发送消息回调：<span class="subst">&#123;res&#125;</span>"</span>);</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>简单说下消息推送，第一个就是你的推送类型，是普通文本还是啥（文档都有，我这净扯淡），然后就是你的范围，再然后就是你的推送内容了，当然根据不同的推送类型你的内容参数也不同，需要进一步封装的朋友可以去看下API。</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>我们在控制器中（不再说<strong>Values</strong>了）加上消息推送的测试，这里的范围可以在你自己的通讯录中查看。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">HttpGet</span>]</span><br><span class="line"><span class="keyword">public</span> ActionResult&lt;IEnumerable&lt;<span class="keyword">string</span>&gt;&gt; Get()</span><br><span class="line">&#123;</span><br><span class="line">	<span class="comment">//…</span></span><br><span class="line">    MessageRange range = <span class="keyword">new</span> MessageRange();</span><br><span class="line">    range.Users = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;();</span><br><span class="line">    range.Users.Add(<span class="string">"10001"</span>);</span><br><span class="line">    QyThridUtil.SendMessage(<span class="string">"我就是来测试"</span>, range, AprilEnums.MessageType.Text);</span><br><span class="line">    <span class="comment">//…</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="/2019/09/02/net-core-qywx-application/4.png" alt="测试"></p>
+<p><img src="/2019/09/02/net-core-qywx-application/5.png" alt="测试"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>写到这里基本上都结束了，为什么我特意拿出来企业微信的内部应用来写这篇呢，其实是做下这个消息推送，以后的自己的工程就可以写个这个然后做异常警告之类的东西，这样想想这篇就不是废话了，编程的奇淫技巧（咳咳，乐趣，乐趣）就在于此，代码自己敲，东西自己组，全在于你自己怎么玩了。</p>
+
+    </div>
+    
+    
+        <nav id="article-nav">
+            
+                <a href="/2019/09/03/hello-php/" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        
+                            Hello PHP
+                        
+                    </div>
+                </a>
+            
+            
+                <a href="/2019/08/27/net-core-filedownload/" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title">net core WebApi——文件分片下载</div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            
+        </nav>
+    
+    <aside id="article-toc" role="navigation" class="article-toc fixed">
+    <div id="article-toc-inner" class="article-toc-inner">
+        <strong class="sidebar-title">
+        目录</strong>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#企业微信"><span class="toc-text">企业微信</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开始"><span class="toc-text">开始</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li></ol>
+    </div>
+</aside>
+</article>
+
+<div id="container"></div>
+
+
+
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: 'oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI',
+            appKey: 'egs7BlX8kO6FuIdaXxDvhe07',
+            notify: 'false',
+            verify: 'false',
+            avatar:'mp',
+            placeholder: '来啊，快活啊 (๑•ᴗ•๑)'
+        })
+    </script>
+
+
+
+
+
+  </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; 2022 D-107
+        </div>
+        <div class="site-nav">
+            
+                <li class="nav-link">
+                    <a href="https://www.m-finder.com" target="_blank">M-finder</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://www.cnblogs.com/AprilBlank/" target="_blank">AprilBlank</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://blog.csdn.net/qq_27948659" target="_blank">大白</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://www.sgclzqq.com/" target="_blank">Sgclzqq</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://93xiaosi.github.io/" target="_blank">Wait</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://thekingstyle.github.io/" target="_blank">WangWeiQiang</a>
+                </li>
+            
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+        <script src="/js/jquery-3.4.1.min.js"></script>
+    
+        <script src="/js/sense.js"></script>
+    
+        <script src="/js/image-view.js"></script>
+    
+
+
+
+    <script src="/js/firework.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":200},"mobile":{"show":false},"log":false});</script></body>
+</html>

@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="看到广播系统，先想起了曾经虐过我的即时通讯。 虽然都是对 websocket 的应用，但是好像又有点区别，这里好好学习一下。">
+<meta name="keywords" content="laravel">
+<meta property="og:type" content="article">
+<meta property="og:title" content="laravel 广播系统学习">
+<meta property="og:url" content="http://yoursite.com/2019/04/12/laravel-broadcasting/index.html">
+<meta property="og:site_name" content="D-107">
+<meta property="og:description" content="看到广播系统，先想起了曾经虐过我的即时通讯。 虽然都是对 websocket 的应用，但是好像又有点区别，这里好好学习一下。">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/04/12/laravel-broadcasting/laravel.jpg">
+<meta property="og:image" content="http://yoursite.com/2019/04/12/laravel-broadcasting/new.png">
+<meta property="og:image" content="http://yoursite.com/2019/04/12/laravel-broadcasting/mes.png">
+<meta property="og:updated_time" content="2022-04-23T16:36:29.400Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="laravel 广播系统学习">
+<meta name="twitter:description" content="看到广播系统，先想起了曾经虐过我的即时通讯。 虽然都是对 websocket 的应用，但是好像又有点区别，这里好好学习一下。">
+<meta name="twitter:image" content="http://yoursite.com/2019/04/12/laravel-broadcasting/laravel.jpg">
+    <title>laravel 广播系统学习 | D-107 | 3wly 项目开发组自留地</title>
+    <link rel="icon shortcut" type="image/ico" href="/images/favicon.ico">
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/sense.css">
+        
+    
+</head>
+
+
+<body>
+<a id="go-top" class="go-top faa-float animated"></a>
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            
+                <img src="/images/d-107.png" class="logo"/>
+            
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            
+                <li class="nav-link">
+                    <a href="/">
+                        首页
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/archives">
+                        归档
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/about">
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</header>
+
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
+        </div>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/">D-107</a></h1>
+            <p class="site-desc">3wly 项目开发组自留地</p>
+            <p class="social">
+                
+                    <a class="github" target="_blank" href="https://github.com/d-107" title="github"><i class="icon-github"></i></a>
+                
+                    <a class="qq" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d" title="qq"><i class="icon-qq"></i></a>
+                
+                    <a class="mail" target="_blank" href="mailto:m@m-finder.com" title="mail"><i class="icon-mail"></i></a>
+                
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            
+                <ul id="search-tags" data-count="11">
+                    
+                        <li data-url="/tags/test/" >test</li>
+                    
+                        <li data-url="/tags/闲言碎语/" >闲言碎语</li>
+                    
+                        <li data-url="/tags/laravel/" >laravel</li>
+                    
+                        <li data-url="/tags/swoole/" >swoole</li>
+                    
+                        <li data-url="/tags/docker/" >docker</li>
+                    
+                        <li data-url="/tags/net-core/" >net core</li>
+                    
+                        <li data-url="/tags/php/" >php</li>
+                    
+                        <li data-url="/tags/问题记录/" >问题记录</li>
+                    
+                        <li data-url="/tags/vue/" >vue</li>
+                    
+                        <li data-url="/tags/vmware/" >vmware</li>
+                    
+                        <li data-url="/tags/新手向/" >新手向</li>
+                    
+                </ul>
+            
+
+            <ul id="search-articles">
+                
+                    <li data-url="/2020/01/16/wsl2-laradock/" data-date="2020-01-16"
+                        data-name="win10 子系统（wsl2）运行laradock" class="search-article hide">
+                        <a href="/2020/01/16/wsl2-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl2）运行laradock</a>
+                        <span class="post-time">2020-01-16</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2020/01/14/wsl-laradock/" data-date="2020-01-14"
+                        data-name="win10 子系统（wsl1）运行 laradock" class="search-article hide">
+                        <a href="/2020/01/14/wsl-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl1）运行 laradock</a>
+                        <span class="post-time">2020-01-14</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/10/net-core-april-util-update-1/" data-date="2019-11-10"
+                        data-name="net core WebApi——April.Util更新之权限" class="search-article hide">
+                        <a href="/2019/11/10/net-core-april-util-update-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——April.Util更新之权限</a>
+                        <span class="post-time">2019-11-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/07/net-core-april-util/" data-date="2019-11-07"
+                        data-name="net core WebApi——公用库April.Util公开及发布" class="search-article hide">
+                        <a href="/2019/11/07/net-core-april-util/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——公用库April.Util公开及发布</a>
+                        <span class="post-time">2019-11-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/05/net-core-unittest/" data-date="2019-11-05"
+                        data-name="net core WebApi——使用xUnits来实现单元测试" class="search-article hide">
+                        <a href="/2019/11/05/net-core-unittest/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用xUnits来实现单元测试</a>
+                        <span class="post-time">2019-11-05</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/29/net-core-v3-publish/" data-date="2019-10-29"
+                        data-name="向net core 3.0进击——多平台项目发布与部署" class="search-article hide">
+                        <a href="/2019/10/29/net-core-v3-publish/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——多平台项目发布与部署</a>
+                        <span class="post-time">2019-10-29</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/laravel-vue-svg/" data-date="2019-10-28"
+                        data-name="在 laravel vue 中使用 svg 图标" class="search-article hide">
+                        <a href="/2019/10/28/laravel-vue-svg/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laravel vue 中使用 svg 图标</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/vmare-docker/" data-date="2019-10-28"
+                        data-name="Linux配置部署_新手向（五）——Docker的安装与使用" class="search-article hide">
+                        <a href="/2019/10/28/vmare-docker/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（五）——Docker的安装与使用</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/24/another-year-1024/" data-date="2019-10-24"
+                        data-name="又是一年1024" class="search-article hide">
+                        <a href="/2019/10/24/another-year-1024/" class="search-article-name"><i class="icon-quo-left icon"></i>又是一年1024</a>
+                        <span class="post-time">2019-10-24</span>
+                        
+                            <span data-url="/tags/闲言碎语/" data-name="闲言碎语" class="search-articles-tag">闲言碎语</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/18/net-core-v3-npoi/" data-date="2019-10-18"
+                        data-name="net core WebApi——使用NPOI导入导出操作" class="search-article hide">
+                        <a href="/2019/10/18/net-core-v3-npoi/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用NPOI导入导出操作</a>
+                        <span class="post-time">2019-10-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/12/laravel-swoole-socket-in-laradock/" data-date="2019-10-12"
+                        data-name="在 laradock 环境中使用 laravel-swoole 的 websocket" class="search-article hide">
+                        <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 的 websocket</a>
+                        <span class="post-time">2019-10-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/09/net-core-v3-april-webapi/" data-date="2019-10-09"
+                        data-name="向net core 3.0进击——April.WebApi从2.2爬到3.0" class="search-article hide">
+                        <a href="/2019/10/09/net-core-v3-april-webapi/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——April.WebApi从2.2爬到3.0</a>
+                        <span class="post-time">2019-10-09</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/07/net-core-v3-swagger/" data-date="2019-10-07"
+                        data-name="向net core 3.0进击——Swagger的改变" class="search-article hide">
+                        <a href="/2019/10/07/net-core-v3-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——Swagger的改变</a>
+                        <span class="post-time">2019-10-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/26/net-core-quartz/" data-date="2019-09-26"
+                        data-name="net core WebApi——定时任务Quartz" class="search-article hide">
+                        <a href="/2019/09/26/net-core-quartz/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——定时任务Quartz</a>
+                        <span class="post-time">2019-09-26</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/23/net-core-redis/" data-date="2019-09-23"
+                        data-name="net core WebApi——缓存神器Redis" class="search-article hide">
+                        <a href="/2019/09/23/net-core-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——缓存神器Redis</a>
+                        <span class="post-time">2019-09-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-redis/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（四）——Redis安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（四）——Redis安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-mysql/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（三）——MySql安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-mysql/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（三）——MySql安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/04/Hello-Dotnet/" data-date="2019-09-04"
+                        data-name="Hello Dotnet" class="search-article hide">
+                        <a href="/2019/09/04/Hello-Dotnet/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello Dotnet</a>
+                        <span class="post-time">2019-09-04</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/03/hello-php/" data-date="2019-09-03"
+                        data-name="Hello PHP" class="search-article hide">
+                        <a href="/2019/09/03/hello-php/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello PHP</a>
+                        <span class="post-time">2019-09-03</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/02/net-core-qywx-application/" data-date="2019-09-02"
+                        data-name="net core WebApi——尝试企业微信来开发企业内部应用" class="search-article hide">
+                        <a href="/2019/09/02/net-core-qywx-application/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——尝试企业微信来开发企业内部应用</a>
+                        <span class="post-time">2019-09-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/27/net-core-filedownload/" data-date="2019-08-27"
+                        data-name="net core WebApi——文件分片下载" class="search-article hide">
+                        <a href="/2019/08/27/net-core-filedownload/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片下载</a>
+                        <span class="post-time">2019-08-27</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/net-core-fileuploader-and-cors/" data-date="2019-08-23"
+                        data-name="net core WebApi——文件分片上传与跨域请求处理" class="search-article hide">
+                        <a href="/2019/08/23/net-core-fileuploader-and-cors/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片上传与跨域请求处理</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/laravel-swoole-in-laradock/" data-date="2019-08-23"
+                        data-name="在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用" class="search-article hide">
+                        <a href="/2019/08/23/laravel-swoole-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-nginx/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（二）——Nginx安装与配置" class="search-article hide">
+                        <a href="/2019/08/21/vmware-nginx/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（二）——Nginx安装与配置</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-use-centos/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（一）——CentOS系统安装" class="search-article hide">
+                        <a href="/2019/08/21/vmware-use-centos/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（一）——CentOS系统安装</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/02/use-laravel-permission-can-tag-in-vue/" data-date="2019-08-02"
+                        data-name="在vue中使用laravel-permission的@can标签" class="search-article hide">
+                        <a href="/2019/08/02/use-laravel-permission-can-tag-in-vue/" class="search-article-name"><i class="icon-quo-left icon"></i>在vue中使用laravel-permission的@can标签</a>
+                        <span class="post-time">2019-08-02</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/vue/" data-name="vue" class="search-articles-tag">vue</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/01/net-core-aop-2/" data-date="2019-08-01"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2" class="search-article hide">
+                        <a href="/2019/08/01/net-core-aop-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2</a>
+                        <span class="post-time">2019-08-01</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/30/net-core-aop-1/" data-date="2019-07-30"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1" class="search-article hide">
+                        <a href="/2019/07/30/net-core-aop-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>
+                        <span class="post-time">2019-07-30</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-sqlsugar-2/" data-date="2019-07-19"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 2" class="search-article hide">
+                        <a href="/2019/07/19/net-core-sqlsugar-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 2</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-webapi-main/" data-date="2019-07-19"
+                        data-name="net core Webapi 总目录" class="search-article hide">
+                        <a href="/2019/07/19/net-core-webapi-main/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi 总目录</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/18/net-core-sqlsugar-1/" data-date="2019-07-18"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 1" class="search-article hide">
+                        <a href="/2019/07/18/net-core-sqlsugar-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 1</a>
+                        <span class="post-time">2019-07-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/11/tp5-fileupload-requestfile-is-null/" data-date="2019-07-11"
+                        data-name="tp5文件上传$_FILES有值request中file却为空" class="search-article hide">
+                        <a href="/2019/07/11/tp5-fileupload-requestfile-is-null/" class="search-article-name"><i class="icon-quo-left icon"></i>tp5文件上传$_FILES有值request中file却为空</a>
+                        <span class="post-time">2019-07-11</span>
+                        
+                            <span data-url="/tags/php/" data-name="php" class="search-articles-tag">php</span>
+                        
+                            <span data-url="/tags/问题记录/" data-name="问题记录" class="search-articles-tag">问题记录</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/10/net-core-cache/" data-date="2019-07-10"
+                        data-name="net core Webapi基础工程搭建（五）——缓存机制" class="search-article hide">
+                        <a href="/2019/07/10/net-core-cache/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（五）——缓存机制</a>
+                        <span class="post-time">2019-07-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/04/net-core-log4net/" data-date="2019-07-04"
+                        data-name="net core Webapi基础工程搭建（四）——日志功能log4net" class="search-article hide">
+                        <a href="/2019/07/04/net-core-log4net/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（四）——日志功能log4net</a>
+                        <span class="post-time">2019-07-04</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-swagger/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（三）——在线接口文档Swagger" class="search-article hide">
+                        <a href="/2019/07/02/net-core-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（三）——在线接口文档Swagger</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-createprogram/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（二）——创建工程" class="search-article hide">
+                        <a href="/2019/07/02/net-core-createprogram/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（二）——创建工程</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-tools-and-environment/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（一）——开发工具及环境" class="search-article hide">
+                        <a href="/2019/07/02/net-core-tools-and-environment/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（一）——开发工具及环境</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/12/laravel-broadcasting/" data-date="2019-04-12"
+                        data-name="laravel 广播系统学习" class="search-article hide">
+                        <a href="/2019/04/12/laravel-broadcasting/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 广播系统学习</a>
+                        <span class="post-time">2019-04-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/09/laravel-queues/" data-date="2019-04-09"
+                        data-name="laravel 队列学习" class="search-article hide">
+                        <a href="/2019/04/09/laravel-queues/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 队列学习</a>
+                        <span class="post-time">2019-04-09</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/03/laravel-events/" data-date="2019-04-03"
+                        data-name="laravel 事件系统学习" class="search-article hide">
+                        <a href="/2019/04/03/laravel-events/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 事件系统学习</a>
+                        <span class="post-time">2019-04-03</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/03/15/laravel-mix/" data-date="2019-03-15"
+                        data-name="使用 laravel mix 编译资源" class="search-article hide">
+                        <a href="/2019/03/15/laravel-mix/" class="search-article-name"><i class="icon-quo-left icon"></i>使用 laravel mix 编译资源</a>
+                        <span class="post-time">2019-03-15</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2018/02/13/hello-world/" data-date="2018-02-13"
+                        data-name="Hello World" class="search-article hide">
+                        <a href="/2018/02/13/hello-world/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello World</a>
+                        <span class="post-time">2018-02-13</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+  <section class="content-inner">
+    <article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title">laravel 广播系统学习</h1>
+    </header>
+
+    <div class="article-entry">
+        <p>看到广播系统，先想起了曾经虐过我的即时通讯。</p>
+<p>虽然都是对 websocket 的应用，但是好像又有点区别，这里好好学习一下。</p>
+<p><img src="/2019/04/12/laravel-broadcasting/laravel.jpg" alt></p>
+<a id="more"></a>
+
+<p>laravel 的广播与事件紧密相关，广播即对事件进行广播，因此在学习广播之前，要先阅读事件和监听器的相关文档。</p>
+<h4 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h4><p>老规矩，先来看配置文件 <code>config/broadcasting.php</code> 里边的配置选项：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> [</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">    | Default Broadcaster</span></span><br><span class="line"><span class="comment">    |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |</span></span><br><span class="line"><span class="comment">    | This option controls the default broadcaster that will be used by the</span></span><br><span class="line"><span class="comment">    | framework when an event needs to be broadcast. You may set this to</span></span><br><span class="line"><span class="comment">    | any of the connections defined in the "connections" array below.</span></span><br><span class="line"><span class="comment">    |</span></span><br><span class="line"><span class="comment">    | Supported: "pusher", "redis", "log", "null"</span></span><br><span class="line"><span class="comment">    |</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"></span><br><span class="line">    <span class="string">'default'</span> =&gt; env(<span class="string">'BROADCAST_DRIVER'</span>, <span class="string">'null'</span>),</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">    |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">    | Broadcast Connections</span></span><br><span class="line"><span class="comment">    |--------------------------------------------------------------------------</span></span><br><span class="line"><span class="comment">    |</span></span><br><span class="line"><span class="comment">    | Here you may define all of the broadcast connections that will be used</span></span><br><span class="line"><span class="comment">    | to broadcast events to other systems or over websockets. Samples of</span></span><br><span class="line"><span class="comment">    | each available type of connection are provided inside this array.</span></span><br><span class="line"><span class="comment">    |</span></span><br><span class="line"><span class="comment">    */</span></span><br><span class="line"></span><br><span class="line">    <span class="string">'connections'</span> =&gt; [</span><br><span class="line"></span><br><span class="line">        <span class="string">'pusher'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'pusher'</span>,</span><br><span class="line">            <span class="string">'key'</span> =&gt; env(<span class="string">'PUSHER_APP_KEY'</span>),</span><br><span class="line">            <span class="string">'secret'</span> =&gt; env(<span class="string">'PUSHER_APP_SECRET'</span>),</span><br><span class="line">            <span class="string">'app_id'</span> =&gt; env(<span class="string">'PUSHER_APP_ID'</span>),</span><br><span class="line">            <span class="string">'options'</span> =&gt; [</span><br><span class="line">                <span class="string">'cluster'</span> =&gt; env(<span class="string">'PUSHER_APP_CLUSTER'</span>),</span><br><span class="line">                <span class="string">'encrypted'</span> =&gt; <span class="keyword">true</span>,</span><br><span class="line">            ],</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="string">'redis'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'redis'</span>,</span><br><span class="line">            <span class="string">'connection'</span> =&gt; <span class="string">'default'</span>,</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="string">'log'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'log'</span>,</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">        <span class="string">'null'</span> =&gt; [</span><br><span class="line">            <span class="string">'driver'</span> =&gt; <span class="string">'null'</span>,</span><br><span class="line">        ],</span><br><span class="line"></span><br><span class="line">    ],</span><br><span class="line"></span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+
+<p>默认情况下，laravel 提供了以上几种开箱即用的广播驱动器程序。</p>
+<p><code>env</code> 配置文件中，默认的驱动为 <code>log</code>，意味着客户端不会受到任何信息，只是会把要广播的消息写入 log 文件中，跟学习目标不符，就先以 <code>pusher</code> 展开学习吧。</p>
+<p>我们就以发布新文章后推送给所有用户为例。</p>
+<h4 id="前期准备"><a href="#前期准备" class="headerlink" title="前期准备"></a>前期准备</h4><p>开始之前，必须要先注册 <code>App\Providers\BroadcastServiceProvider</code>，在 <code>config/app.php</code> 配置文件中的 <code>providers</code> 数组中取消对提供者的注释。</p>
+<p>注册:<a href="https://dashboard.pusher.com" target="_blank" rel="noopener"> [ pusher ] </a></p>
+<p>然后把相关参数配置到 <code>.env</code> 文件。</p>
+<h4 id="安装组件："><a href="#安装组件：" class="headerlink" title="安装组件："></a>安装组件：</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">composer <span class="keyword">require</span> pusher/pusher-php-server</span><br><span class="line">npm install --save laravel-<span class="keyword">echo</span> pusher-js</span><br></pre></td></tr></table></figure>
+
+<p>添加文章模块，包含 migrate，controller，model，view 和 router 等内容。</p>
+<h4 id="新建事件："><a href="#新建事件：" class="headerlink" title="新建事件："></a>新建事件：</h4><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">php artisan make:event NewArticleNotificationEvent</span><br><span class="line"></span><br><span class="line"><span class="comment">// 事件内容：</span></span><br><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title">App</span>\<span class="title">Events</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Queue</span>\<span class="title">SerializesModels</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>\<span class="title">Channel</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>\<span class="title">PrivateChannel</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Foundation</span>\<span class="title">Events</span>\<span class="title">Dispatchable</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Broadcasting</span>\<span class="title">InteractsWithSockets</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">Illuminate</span>\<span class="title">Contracts</span>\<span class="title">Broadcasting</span>\<span class="title">ShouldBroadcast</span>;</span><br><span class="line"><span class="keyword">use</span> <span class="title">App</span>\<span class="title">Article</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">NewArticleNotificationEvent</span> <span class="keyword">implements</span> <span class="title">ShouldBroadcast</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">use</span> <span class="title">Dispatchable</span>, <span class="title">InteractsWithSockets</span>, <span class="title">SerializesModels</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> $article;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Create a new event instance.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__construct</span><span class="params">(Article $article)</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">$this</span>-&gt;article = $article;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">broadcastWith</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [</span><br><span class="line">            <span class="string">'title'</span> =&gt; <span class="keyword">$this</span>-&gt;article-&gt;title,</span><br><span class="line">            <span class="string">'content'</span> =&gt; <span class="keyword">$this</span>-&gt;article-&gt;content,</span><br><span class="line">            <span class="string">'author'</span> =&gt; <span class="keyword">$this</span>-&gt;article-&gt;user-&gt;name</span><br><span class="line">        ];</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Get the channels the event should broadcast on.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> \Illuminate\Broadcasting\Channel|array</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">broadcastOn</span><span class="params">()</span></span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> Channel(<span class="string">'articles'</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="触发事件"><a href="#触发事件" class="headerlink" title="触发事件"></a>触发事件</h4><p>在保存文章的控制器中触发事件：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$data = array_merge($request-&gt;only([<span class="string">'title'</span>, <span class="string">'content'</span>]), [<span class="string">'uid'</span> =&gt; Auth::id()]);</span><br><span class="line">$article = Article::create($data);</span><br><span class="line">broadcast(<span class="keyword">new</span> NewArticleNotificationEvent($article));</span><br></pre></td></tr></table></figure>
+
+<h4 id="前端监听"><a href="#前端监听" class="headerlink" title="前端监听"></a>前端监听</h4><p>文章列表用了vue组件，在这个组件中进行事件监听。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">&lt;template&gt;</span><br><span class="line">    &lt;div class=&quot;container&quot;&gt;</span><br><span class="line">        &lt;table class=&quot;table table-striped&quot;&gt;</span><br><span class="line">            &lt;tr&gt;</span><br><span class="line">                &lt;th&gt;ID&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;Author&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;Title&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;Content&lt;/th&gt;</span><br><span class="line">                &lt;th&gt;Created At&lt;/th&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">            &lt;tr v-for=&quot;article in articles&quot;&gt;</span><br><span class="line">                &lt;td&gt;&#123;&#123;article.id&#125;&#125;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&#123;&#123;article.user.name&#125;&#125;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&#123;&#123;article.title&#125;&#125;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&#123;&#123;article.content&#125;&#125;&lt;/td&gt;</span><br><span class="line">                &lt;td&gt;&#123;&#123;article.created_at&#125;&#125;&lt;/td&gt;</span><br><span class="line">            &lt;/tr&gt;</span><br><span class="line">        &lt;/table&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/template&gt;</span><br><span class="line"></span><br><span class="line">&lt;script&gt;</span><br><span class="line">export default &#123;</span><br><span class="line">    props: [&apos;articles&apos;],</span><br><span class="line">    created() &#123;</span><br><span class="line">        Echo.channel(&apos;articles&apos;).listen(&apos;NewArticleNotificationEvent&apos;, (article) =&gt; &#123;</span><br><span class="line">            console.log(article);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">&lt;/script&gt;</span><br><span class="line"></span><br><span class="line">&lt;style scoped&gt;</span><br><span class="line"></span><br><span class="line">&lt;/style&gt;</span><br></pre></td></tr></table></figure>
+
+<p>写好后要在命令行执行 npm run watch-poll 实时编译文件。</p>
+<h4 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h4><p>写篇文章测试一下：<br><img src="/2019/04/12/laravel-broadcasting/new.png" alt></p>
+<p><img src="/2019/04/12/laravel-broadcasting/mes.png" alt></p>
+<h4 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h4><ul>
+<li>不需要创建 channel 路由</li>
+<li>不需要开启队列监听</li>
+<li>如果没反应请先强制刷新浏览器</li>
+</ul>
+
+    </div>
+    
+    
+        <nav id="article-nav">
+            
+                <a href="/2019/07/02/net-core-tools-and-environment/" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        
+                            net core Webapi基础工程搭建（一）——开发工具及环境
+                        
+                    </div>
+                </a>
+            
+            
+                <a href="/2019/04/09/laravel-queues/" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title">laravel 队列学习</div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            
+        </nav>
+    
+    <aside id="article-toc" role="navigation" class="article-toc fixed">
+    <div id="article-toc-inner" class="article-toc-inner">
+        <strong class="sidebar-title">
+        目录</strong>
+        <ol class="toc"><li class="toc-item toc-level-4"><a class="toc-link" href="#配置"><span class="toc-text">配置</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#前期准备"><span class="toc-text">前期准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装组件："><span class="toc-text">安装组件：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#新建事件："><span class="toc-text">新建事件：</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#触发事件"><span class="toc-text">触发事件</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#前端监听"><span class="toc-text">前端监听</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#注意事项"><span class="toc-text">注意事项</span></a></li></ol>
+    </div>
+</aside>
+</article>
+
+<div id="container"></div>
+
+
+
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: 'oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI',
+            appKey: 'egs7BlX8kO6FuIdaXxDvhe07',
+            notify: 'false',
+            verify: 'false',
+            avatar:'mp',
+            placeholder: '来啊，快活啊 (๑•ᴗ•๑)'
+        })
+    </script>
+
+
+
+
+
+  </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; 2022 D-107
+        </div>
+        <div class="site-nav">
+            
+                <li class="nav-link">
+                    <a href="https://www.m-finder.com" target="_blank">M-finder</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://www.cnblogs.com/AprilBlank/" target="_blank">AprilBlank</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://blog.csdn.net/qq_27948659" target="_blank">大白</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://www.sgclzqq.com/" target="_blank">Sgclzqq</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://93xiaosi.github.io/" target="_blank">Wait</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://thekingstyle.github.io/" target="_blank">WangWeiQiang</a>
+                </li>
+            
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+        <script src="/js/jquery-3.4.1.min.js"></script>
+    
+        <script src="/js/sense.js"></script>
+    
+        <script src="/js/image-view.js"></script>
+    
+
+
+
+    <script src="/js/firework.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":200},"mobile":{"show":false},"log":false});</script></body>
+</html>

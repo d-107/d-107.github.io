@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言一天天不知道怎么过的，但确实挺忙，事赶事不带停那种，让我感觉跟在流水线干活一样，忙活的事差不多了就喘口气继续补充这一系列的内容，前面几篇基本上把一个常规的后端服务搭建差不多了，后面的会时不时根据自己需要或者常规的测试内容来一点点完善更新。 拦截器这里先不提AOP的内容，其实在我个人之前的理解，AOP开发的思想就是，我们做的某些操作例如身份验证，日志记录，异常抓捕等等这些操作，可以单独拎出来放那">
+<meta name="keywords" content="net core">
+<meta property="og:type" content="article">
+<meta property="og:title" content="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1">
+<meta property="og:url" content="http://yoursite.com/2019/07/30/net-core-aop-1/index.html">
+<meta property="og:site_name" content="D-107">
+<meta property="og:description" content="前言一天天不知道怎么过的，但确实挺忙，事赶事不带停那种，让我感觉跟在流水线干活一样，忙活的事差不多了就喘口气继续补充这一系列的内容，前面几篇基本上把一个常规的后端服务搭建差不多了，后面的会时不时根据自己需要或者常规的测试内容来一点点完善更新。 拦截器这里先不提AOP的内容，其实在我个人之前的理解，AOP开发的思想就是，我们做的某些操作例如身份验证，日志记录，异常抓捕等等这些操作，可以单独拎出来放那">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/7.png">
+<meta property="og:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/8.png">
+<meta property="og:updated_time" content="2022-04-23T16:36:29.404Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1">
+<meta name="twitter:description" content="前言一天天不知道怎么过的，但确实挺忙，事赶事不带停那种，让我感觉跟在流水线干活一样，忙活的事差不多了就喘口气继续补充这一系列的内容，前面几篇基本上把一个常规的后端服务搭建差不多了，后面的会时不时根据自己需要或者常规的测试内容来一点点完善更新。 拦截器这里先不提AOP的内容，其实在我个人之前的理解，AOP开发的思想就是，我们做的某些操作例如身份验证，日志记录，异常抓捕等等这些操作，可以单独拎出来放那">
+<meta name="twitter:image" content="http://yoursite.com/2019/07/30/net-core-aop-1/1.png">
+    <title>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1 | D-107 | 3wly 项目开发组自留地</title>
+    <link rel="icon shortcut" type="image/ico" href="/images/favicon.ico">
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/sense.css">
+        
+    
+</head>
+
+
+<body>
+<a id="go-top" class="go-top faa-float animated"></a>
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            
+                <img src="/images/d-107.png" class="logo"/>
+            
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            
+                <li class="nav-link">
+                    <a href="/">
+                        首页
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/archives">
+                        归档
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/about">
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</header>
+
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
+        </div>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/">D-107</a></h1>
+            <p class="site-desc">3wly 项目开发组自留地</p>
+            <p class="social">
+                
+                    <a class="github" target="_blank" href="https://github.com/d-107" title="github"><i class="icon-github"></i></a>
+                
+                    <a class="qq" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d" title="qq"><i class="icon-qq"></i></a>
+                
+                    <a class="mail" target="_blank" href="mailto:m@m-finder.com" title="mail"><i class="icon-mail"></i></a>
+                
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            
+                <ul id="search-tags" data-count="11">
+                    
+                        <li data-url="/tags/test/" >test</li>
+                    
+                        <li data-url="/tags/闲言碎语/" >闲言碎语</li>
+                    
+                        <li data-url="/tags/laravel/" >laravel</li>
+                    
+                        <li data-url="/tags/swoole/" >swoole</li>
+                    
+                        <li data-url="/tags/docker/" >docker</li>
+                    
+                        <li data-url="/tags/net-core/" >net core</li>
+                    
+                        <li data-url="/tags/php/" >php</li>
+                    
+                        <li data-url="/tags/问题记录/" >问题记录</li>
+                    
+                        <li data-url="/tags/vue/" >vue</li>
+                    
+                        <li data-url="/tags/vmware/" >vmware</li>
+                    
+                        <li data-url="/tags/新手向/" >新手向</li>
+                    
+                </ul>
+            
+
+            <ul id="search-articles">
+                
+                    <li data-url="/2020/01/16/wsl2-laradock/" data-date="2020-01-16"
+                        data-name="win10 子系统（wsl2）运行laradock" class="search-article hide">
+                        <a href="/2020/01/16/wsl2-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl2）运行laradock</a>
+                        <span class="post-time">2020-01-16</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2020/01/14/wsl-laradock/" data-date="2020-01-14"
+                        data-name="win10 子系统（wsl1）运行 laradock" class="search-article hide">
+                        <a href="/2020/01/14/wsl-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl1）运行 laradock</a>
+                        <span class="post-time">2020-01-14</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/10/net-core-april-util-update-1/" data-date="2019-11-10"
+                        data-name="net core WebApi——April.Util更新之权限" class="search-article hide">
+                        <a href="/2019/11/10/net-core-april-util-update-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——April.Util更新之权限</a>
+                        <span class="post-time">2019-11-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/07/net-core-april-util/" data-date="2019-11-07"
+                        data-name="net core WebApi——公用库April.Util公开及发布" class="search-article hide">
+                        <a href="/2019/11/07/net-core-april-util/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——公用库April.Util公开及发布</a>
+                        <span class="post-time">2019-11-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/05/net-core-unittest/" data-date="2019-11-05"
+                        data-name="net core WebApi——使用xUnits来实现单元测试" class="search-article hide">
+                        <a href="/2019/11/05/net-core-unittest/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用xUnits来实现单元测试</a>
+                        <span class="post-time">2019-11-05</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/29/net-core-v3-publish/" data-date="2019-10-29"
+                        data-name="向net core 3.0进击——多平台项目发布与部署" class="search-article hide">
+                        <a href="/2019/10/29/net-core-v3-publish/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——多平台项目发布与部署</a>
+                        <span class="post-time">2019-10-29</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/laravel-vue-svg/" data-date="2019-10-28"
+                        data-name="在 laravel vue 中使用 svg 图标" class="search-article hide">
+                        <a href="/2019/10/28/laravel-vue-svg/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laravel vue 中使用 svg 图标</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/vmare-docker/" data-date="2019-10-28"
+                        data-name="Linux配置部署_新手向（五）——Docker的安装与使用" class="search-article hide">
+                        <a href="/2019/10/28/vmare-docker/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（五）——Docker的安装与使用</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/24/another-year-1024/" data-date="2019-10-24"
+                        data-name="又是一年1024" class="search-article hide">
+                        <a href="/2019/10/24/another-year-1024/" class="search-article-name"><i class="icon-quo-left icon"></i>又是一年1024</a>
+                        <span class="post-time">2019-10-24</span>
+                        
+                            <span data-url="/tags/闲言碎语/" data-name="闲言碎语" class="search-articles-tag">闲言碎语</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/18/net-core-v3-npoi/" data-date="2019-10-18"
+                        data-name="net core WebApi——使用NPOI导入导出操作" class="search-article hide">
+                        <a href="/2019/10/18/net-core-v3-npoi/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用NPOI导入导出操作</a>
+                        <span class="post-time">2019-10-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/12/laravel-swoole-socket-in-laradock/" data-date="2019-10-12"
+                        data-name="在 laradock 环境中使用 laravel-swoole 的 websocket" class="search-article hide">
+                        <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 的 websocket</a>
+                        <span class="post-time">2019-10-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/09/net-core-v3-april-webapi/" data-date="2019-10-09"
+                        data-name="向net core 3.0进击——April.WebApi从2.2爬到3.0" class="search-article hide">
+                        <a href="/2019/10/09/net-core-v3-april-webapi/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——April.WebApi从2.2爬到3.0</a>
+                        <span class="post-time">2019-10-09</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/07/net-core-v3-swagger/" data-date="2019-10-07"
+                        data-name="向net core 3.0进击——Swagger的改变" class="search-article hide">
+                        <a href="/2019/10/07/net-core-v3-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——Swagger的改变</a>
+                        <span class="post-time">2019-10-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/26/net-core-quartz/" data-date="2019-09-26"
+                        data-name="net core WebApi——定时任务Quartz" class="search-article hide">
+                        <a href="/2019/09/26/net-core-quartz/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——定时任务Quartz</a>
+                        <span class="post-time">2019-09-26</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/23/net-core-redis/" data-date="2019-09-23"
+                        data-name="net core WebApi——缓存神器Redis" class="search-article hide">
+                        <a href="/2019/09/23/net-core-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——缓存神器Redis</a>
+                        <span class="post-time">2019-09-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-redis/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（四）——Redis安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（四）——Redis安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-mysql/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（三）——MySql安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-mysql/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（三）——MySql安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/04/Hello-Dotnet/" data-date="2019-09-04"
+                        data-name="Hello Dotnet" class="search-article hide">
+                        <a href="/2019/09/04/Hello-Dotnet/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello Dotnet</a>
+                        <span class="post-time">2019-09-04</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/03/hello-php/" data-date="2019-09-03"
+                        data-name="Hello PHP" class="search-article hide">
+                        <a href="/2019/09/03/hello-php/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello PHP</a>
+                        <span class="post-time">2019-09-03</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/02/net-core-qywx-application/" data-date="2019-09-02"
+                        data-name="net core WebApi——尝试企业微信来开发企业内部应用" class="search-article hide">
+                        <a href="/2019/09/02/net-core-qywx-application/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——尝试企业微信来开发企业内部应用</a>
+                        <span class="post-time">2019-09-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/27/net-core-filedownload/" data-date="2019-08-27"
+                        data-name="net core WebApi——文件分片下载" class="search-article hide">
+                        <a href="/2019/08/27/net-core-filedownload/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片下载</a>
+                        <span class="post-time">2019-08-27</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/net-core-fileuploader-and-cors/" data-date="2019-08-23"
+                        data-name="net core WebApi——文件分片上传与跨域请求处理" class="search-article hide">
+                        <a href="/2019/08/23/net-core-fileuploader-and-cors/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片上传与跨域请求处理</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/laravel-swoole-in-laradock/" data-date="2019-08-23"
+                        data-name="在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用" class="search-article hide">
+                        <a href="/2019/08/23/laravel-swoole-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-nginx/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（二）——Nginx安装与配置" class="search-article hide">
+                        <a href="/2019/08/21/vmware-nginx/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（二）——Nginx安装与配置</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-use-centos/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（一）——CentOS系统安装" class="search-article hide">
+                        <a href="/2019/08/21/vmware-use-centos/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（一）——CentOS系统安装</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/02/use-laravel-permission-can-tag-in-vue/" data-date="2019-08-02"
+                        data-name="在vue中使用laravel-permission的@can标签" class="search-article hide">
+                        <a href="/2019/08/02/use-laravel-permission-can-tag-in-vue/" class="search-article-name"><i class="icon-quo-left icon"></i>在vue中使用laravel-permission的@can标签</a>
+                        <span class="post-time">2019-08-02</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/vue/" data-name="vue" class="search-articles-tag">vue</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/01/net-core-aop-2/" data-date="2019-08-01"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2" class="search-article hide">
+                        <a href="/2019/08/01/net-core-aop-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2</a>
+                        <span class="post-time">2019-08-01</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/30/net-core-aop-1/" data-date="2019-07-30"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1" class="search-article hide">
+                        <a href="/2019/07/30/net-core-aop-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>
+                        <span class="post-time">2019-07-30</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-sqlsugar-2/" data-date="2019-07-19"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 2" class="search-article hide">
+                        <a href="/2019/07/19/net-core-sqlsugar-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 2</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-webapi-main/" data-date="2019-07-19"
+                        data-name="net core Webapi 总目录" class="search-article hide">
+                        <a href="/2019/07/19/net-core-webapi-main/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi 总目录</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/18/net-core-sqlsugar-1/" data-date="2019-07-18"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 1" class="search-article hide">
+                        <a href="/2019/07/18/net-core-sqlsugar-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 1</a>
+                        <span class="post-time">2019-07-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/11/tp5-fileupload-requestfile-is-null/" data-date="2019-07-11"
+                        data-name="tp5文件上传$_FILES有值request中file却为空" class="search-article hide">
+                        <a href="/2019/07/11/tp5-fileupload-requestfile-is-null/" class="search-article-name"><i class="icon-quo-left icon"></i>tp5文件上传$_FILES有值request中file却为空</a>
+                        <span class="post-time">2019-07-11</span>
+                        
+                            <span data-url="/tags/php/" data-name="php" class="search-articles-tag">php</span>
+                        
+                            <span data-url="/tags/问题记录/" data-name="问题记录" class="search-articles-tag">问题记录</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/10/net-core-cache/" data-date="2019-07-10"
+                        data-name="net core Webapi基础工程搭建（五）——缓存机制" class="search-article hide">
+                        <a href="/2019/07/10/net-core-cache/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（五）——缓存机制</a>
+                        <span class="post-time">2019-07-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/04/net-core-log4net/" data-date="2019-07-04"
+                        data-name="net core Webapi基础工程搭建（四）——日志功能log4net" class="search-article hide">
+                        <a href="/2019/07/04/net-core-log4net/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（四）——日志功能log4net</a>
+                        <span class="post-time">2019-07-04</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-swagger/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（三）——在线接口文档Swagger" class="search-article hide">
+                        <a href="/2019/07/02/net-core-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（三）——在线接口文档Swagger</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-createprogram/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（二）——创建工程" class="search-article hide">
+                        <a href="/2019/07/02/net-core-createprogram/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（二）——创建工程</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-tools-and-environment/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（一）——开发工具及环境" class="search-article hide">
+                        <a href="/2019/07/02/net-core-tools-and-environment/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（一）——开发工具及环境</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/12/laravel-broadcasting/" data-date="2019-04-12"
+                        data-name="laravel 广播系统学习" class="search-article hide">
+                        <a href="/2019/04/12/laravel-broadcasting/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 广播系统学习</a>
+                        <span class="post-time">2019-04-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/09/laravel-queues/" data-date="2019-04-09"
+                        data-name="laravel 队列学习" class="search-article hide">
+                        <a href="/2019/04/09/laravel-queues/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 队列学习</a>
+                        <span class="post-time">2019-04-09</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/03/laravel-events/" data-date="2019-04-03"
+                        data-name="laravel 事件系统学习" class="search-article hide">
+                        <a href="/2019/04/03/laravel-events/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 事件系统学习</a>
+                        <span class="post-time">2019-04-03</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/03/15/laravel-mix/" data-date="2019-03-15"
+                        data-name="使用 laravel mix 编译资源" class="search-article hide">
+                        <a href="/2019/03/15/laravel-mix/" class="search-article-name"><i class="icon-quo-left icon"></i>使用 laravel mix 编译资源</a>
+                        <span class="post-time">2019-03-15</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2018/02/13/hello-world/" data-date="2018-02-13"
+                        data-name="Hello World" class="search-article hide">
+                        <a href="/2018/02/13/hello-world/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello World</a>
+                        <span class="post-time">2018-02-13</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+  <section class="content-inner">
+    <article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title">net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</h1>
+    </header>
+
+    <div class="article-entry">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>一天天不知道怎么过的，但确实挺忙，事赶事不带停那种，让我感觉跟在流水线干活一样，忙活的事差不多了就喘口气继续补充这一系列的内容，前面几篇基本上把一个常规的后端服务搭建差不多了，后面的会时不时根据自己需要或者常规的测试内容来一点点完善更新。</p>
+<h3 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h3><p>这里先不提AOP的内容，其实在我个人之前的理解，AOP开发的思想就是，我们做的某些操作例如身份验证，日志记录，异常抓捕等等这些操作，可以单独拎出来放那，谁用了加个头部标识就可以了，剩余的交给代码来处理，这样我们开发就只需要关心业务功能，而其他的全都可以不用考虑，这就是框架的好处，别人封装集成好，就可以省去很大的开发工作量。</p>
+<p>好，开始说拦截器，其实也是中间层，个人感觉跟AOP的概念类似，就放到这里写上了。</p>
+<h3 id="异常拦截器"><a href="#异常拦截器" class="headerlink" title="异常拦截器"></a>异常拦截器</h3><p>在我们<strong>Api</strong>的工程目录下新建文件夹Filters用于存放拦截器，之后我们新建<strong>ExceptionFilter</strong>这个异常的拦截器，用于记录工程抛异常并做对应回调处理。</p>
+<p>代码如下，具体不过多解释，因为实在觉得这个没啥说的，只是注意异步调用的问题即可。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ExceptionFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> </span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="next"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ExceptionFilter</span>(<span class="params">RequestDelegate next</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> </span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="context"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext context</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">try</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">await</span> _next(context);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">catch</span> (Exception ex) <span class="comment">//发生异常</span></span><br><span class="line">        &#123;</span><br><span class="line">            context.Response.StatusCode = <span class="number">500</span>;</span><br><span class="line">            LogUtil.Error(<span class="string">$"response exception:<span class="subst">&#123;ex.Message&#125;</span>"</span>);<span class="comment">// &#123;ex.StackTrace&#125;</span></span><br><span class="line">            <span class="keyword">await</span> ResponseUtil.HandleExceptionAsync(<span class="number">500</span>, <span class="string">"服务器错误"</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个地方的<strong>ResponseUtil</strong>是单独在Util层创建的（公共类尽量扔到同一个工程类库下，以后一键打包，各种复用）。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ResponseUtil</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 回调</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="statusCode"&gt;</span>html状态码<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="msg"&gt;</span>消息<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Task <span class="title">HandleExceptionAsync</span>(<span class="params"><span class="keyword">int</span> statusCode, <span class="keyword">string</span> msg</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">var</span> data = <span class="keyword">new</span> &#123; code = statusCode, msg = msg &#125;;</span><br><span class="line">        <span class="keyword">string</span> text = JsonConvert.SerializeObject(data);</span><br><span class="line">        <span class="keyword">var</span> response = AprilConfig.HttpCurrent.Response;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(response.ContentType))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="comment">//跨域的时候注意，不带header没法接收回调</span></span><br><span class="line">            response.Headers.Add(<span class="string">"Access-Control-Allow-Origin"</span>, <span class="string">"*"</span>);</span><br><span class="line">            response.Headers.Add(<span class="string">"Access-Control-Allow-Credentials"</span>, <span class="string">"true"</span>);</span><br><span class="line">            <span class="comment">//因为这个是json</span></span><br><span class="line">            response.ContentType = <span class="string">"application/json;charset=utf-8"</span>;</span><br><span class="line">            response.StatusCode = <span class="number">200</span>;</span><br><span class="line">            response.ContentLength = text.Length;</span><br><span class="line">            <span class="keyword">return</span> response.WriteAsync(text);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> response.WriteAsync(text);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>之后我们依然要在Startup中注册我们这个中间层。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>     &#123;</span><br><span class="line">         app.UseMiddleware&lt;ExceptionFilter&gt;();</span><br><span class="line">…</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样我们在全局如果出现异常的时候，可以统一捕获到问题，然后做记录，当然在测试环境下注意，如果这个错误帮助页打开的时候，那上面的拦截器将毫无乱用。<br><img src="/2019/07/30/net-core-aop-1/1.png" alt="Startup"></p>
+<h3 id="测试结果"><a href="#测试结果" class="headerlink" title="测试结果"></a>测试结果</h3><p><img src="/2019/07/30/net-core-aop-1/2.png" alt="测试"><br><img src="/2019/07/30/net-core-aop-1/3.png" alt="日志记录"><br>这样如果真是哪个地方没有做异常捕获，全局最终都会一个不漏的抓住然后告诉你，好处是如果懒那就所有地方都不写了，问题是有些异常即使捕获但是不需要告知用户也不需要做记录（比如文件上传下载的线程中断异常之类的），所以这个只是为了保险起见而不是为了省事。</p>
+<h3 id="身份验证拦截器"><a href="#身份验证拦截器" class="headerlink" title="身份验证拦截器"></a>身份验证拦截器</h3><p>接下来我们继续创建一个<strong>AuthFilter</strong>，目的是做身份验证的判断，如果没通过就没必要再进入具体的控制器了。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">AuthFilter</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">readonly</span> RequestDelegate _next;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">AuthFilter</span>(<span class="params">RequestDelegate next</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        _next = next;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Task <span class="title">Invoke</span>(<span class="params">HttpContext context</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">        <span class="keyword">if</span> (context.Request.Method == <span class="string">"OPTIONS"</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">return</span> _next(context);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">var</span> headers = context.Request.Headers;</span><br><span class="line">        <span class="comment">//检查头文件是否有jwt token</span></span><br><span class="line">        <span class="keyword">if</span> (!headers.ContainsKey(<span class="string">"Authorization"</span>))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="keyword">string</span> path = context.Request.Path.Value;</span><br><span class="line">            <span class="keyword">if</span> (!AprilConfig.AllowUrl.Contains(path) &amp;&amp; path.IndexOf(<span class="string">"swagger"</span>) &lt; <span class="number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="comment">//这里做下相关的身份校验</span></span><br><span class="line">                <span class="keyword">return</span> ResponseUtil.HandleExceptionAsync(<span class="number">401</span>, <span class="string">"请登录"</span>);</span><br><span class="line">                </span><br><span class="line">                <span class="comment">//判断是否有权限查看(在身份验证后判断对应的权限，这个方法后续再写)</span></span><br><span class="line">                <span class="keyword">return</span> ResponseUtil.HandleExceptionAsync(<span class="number">-2</span>, <span class="string">"无权访问"</span>);</span><br><span class="line"></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> _next(context);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>同样我们需要在Startup注册使用中间层。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>     &#123;</span><br><span class="line">         app.UseMiddleware&lt;ExceptionFilter&gt;();</span><br><span class="line">         app.UseMiddleware&lt;AuthFilter&gt;();</span><br><span class="line">…</span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><img src="/2019/07/30/net-core-aop-1/4.png" alt="测试"><br>然后访问我们的Swagger，效果就很明显了。<br><img src="/2019/07/30/net-core-aop-1/5.png" alt="Swagger"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>这一篇主要就是引入中间层的使用，个人认为什么AOP开发OOP开发完全因人而异，没必要为了追求新技术而去整体大功能改造，新技术确实使用起来方便，也有很好的前景，但是对于企业来讲，稳定是最重要的，不会为了1%的性能速度而去冒30%甚至更高的风险，但是我还是要说一句，<strong>net core到目前为止已经历过一个大版本的更新，虽然3.0没有正式发布，但是一个个版本的更新之后，稳定性已经很ok了，所以该吃螃蟹都可以动手了</strong>。<br>下一篇，继续引入AOP的开发，主要用的第三方的组件<strong>AspectCore</strong>，将针对接口调用的时候做一些常规操作。</p>
+<hr>
+<h3 id="补充-2019-07-31"><a href="#补充-2019-07-31" class="headerlink" title="补充 2019-07-31"></a>补充 2019-07-31</h3><p>今天在做调试的时候发现一个问题，现状如下<br><img src="/2019/07/30/net-core-aop-1/6.png" alt="问题"><br>发现这个问题我的第一反应是，<strong>字符编码</strong>，但是看到我回调的时候明显已经设置了ContentType，所以这个应该不是错误的原因，但是多次刷新的测试结果是偶尔正常，怪异的情况总是伴随着bug，于是比对了正确的回调信息和错误的回调信息（这里是通过chrome浏览器调试然后获取的回调信息，具体调试方法后续前端介绍，当然基本上都知道）。</p>
+<p><img src="/2019/07/30/net-core-aop-1/7.png" alt="比对结果"><br>这样一看发现了问题所在，所以这个地方决定不再自主去设置Length了。</p>
+<p><img src="/2019/07/30/net-core-aop-1/8.png" alt="解决"></p>
+
+    </div>
+    
+    
+        <nav id="article-nav">
+            
+                <a href="/2019/08/01/net-core-aop-2/" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        
+                            net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2
+                        
+                    </div>
+                </a>
+            
+            
+                <a href="/2019/07/19/net-core-sqlsugar-2/" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title">net core Webapi基础工程搭建（六）——数据库操作_Part 2</div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            
+        </nav>
+    
+    <aside id="article-toc" role="navigation" class="article-toc fixed">
+    <div id="article-toc-inner" class="article-toc-inner">
+        <strong class="sidebar-title">
+        目录</strong>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#拦截器"><span class="toc-text">拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#异常拦截器"><span class="toc-text">异常拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试结果"><span class="toc-text">测试结果</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#身份验证拦截器"><span class="toc-text">身份验证拦截器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#补充-2019-07-31"><span class="toc-text">补充 2019-07-31</span></a></li></ol>
+    </div>
+</aside>
+</article>
+
+<div id="container"></div>
+
+
+
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: 'oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI',
+            appKey: 'egs7BlX8kO6FuIdaXxDvhe07',
+            notify: 'false',
+            verify: 'false',
+            avatar:'mp',
+            placeholder: '来啊，快活啊 (๑•ᴗ•๑)'
+        })
+    </script>
+
+
+
+
+
+  </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; 2022 D-107
+        </div>
+        <div class="site-nav">
+            
+                <li class="nav-link">
+                    <a href="https://www.m-finder.com" target="_blank">M-finder</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://www.cnblogs.com/AprilBlank/" target="_blank">AprilBlank</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://blog.csdn.net/qq_27948659" target="_blank">大白</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://www.sgclzqq.com/" target="_blank">Sgclzqq</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://93xiaosi.github.io/" target="_blank">Wait</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://thekingstyle.github.io/" target="_blank">WangWeiQiang</a>
+                </li>
+            
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+        <script src="/js/jquery-3.4.1.min.js"></script>
+    
+        <script src="/js/sense.js"></script>
+    
+        <script src="/js/image-view.js"></script>
+    
+
+
+
+    <script src="/js/firework.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":200},"mobile":{"show":false},"log":false});</script></body>
+</html>

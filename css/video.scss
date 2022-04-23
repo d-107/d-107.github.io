@@ -1,0 +1,103 @@
+// 视频
+.video-box {
+  padding: 0;
+  text-align: center;
+
+  .video {
+    min-height: 400px;
+    height: auto;
+    width: 100%;
+    display: block;
+    position: relative;
+
+    .video-media {
+      position: relative;
+      z-index: 0;
+      height: 55vh;
+      min-height: 400px;
+      overflow: hidden;
+
+      video {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+        min-width: 100%;
+        min-height: 100%;
+      }
+    }
+
+    .video-frame {
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      bottom: -1px;
+      left: 0;
+      min-width: 100%;
+
+      img {
+        display: block;
+        width: 100%;
+      }
+    }
+
+    .video-overlay {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(255,255,255, 0.1);
+    }
+
+    .video-inner, .video-inner a {
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .video-inner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -65%);
+      -webkit-transform: translate(-50%, -65%);
+      -moz-transform: translate(-50%, -65%);
+      -o-transform: translate(-50%, -65%);
+      -ms-transform: translate(-50%, -65%);
+      z-index: 99;
+      .site-title, .site-title a{
+        font-size:38px;
+        font-weight: bold;
+      }
+      .site-desc{
+        font-size:24px;
+      }
+      .social {
+        margin-top: 25px;
+
+        a {
+          margin: 0 5px;
+          i{
+            font-size: 18px;
+          }
+          &:hover {
+            color: #eee;
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 860px) {
+  .site-title {
+    margin-top: 70px!important;
+  }
+  .site-desc{
+    font-size: 14px!important;
+  }
+}

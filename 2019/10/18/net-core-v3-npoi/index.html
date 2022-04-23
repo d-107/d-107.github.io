@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言时间过得好快，在之前升级到3.0之后，就感觉好久没再动过啥东西了，之前有问到Swagger的中文汉化，虽说我觉得这种操作的意义不是太大，也是多少鼓捣了下，其实个人感觉就是元素内容替换，既然可以执行js了那不就是网页上随便搞了，所以就没往下再折腾，但是现在需要用到Excel的操作了，那就不得不提起这个NPOI了。 NPOI在之前.net framework的时候，工程需要用到Excel的导入导出">
+<meta name="keywords" content="net core">
+<meta property="og:type" content="article">
+<meta property="og:title" content="net core WebApi——使用NPOI导入导出操作">
+<meta property="og:url" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/index.html">
+<meta property="og:site_name" content="D-107">
+<meta property="og:description" content="前言时间过得好快，在之前升级到3.0之后，就感觉好久没再动过啥东西了，之前有问到Swagger的中文汉化，虽说我觉得这种操作的意义不是太大，也是多少鼓捣了下，其实个人感觉就是元素内容替换，既然可以执行js了那不就是网页上随便搞了，所以就没往下再折腾，但是现在需要用到Excel的操作了，那就不得不提起这个NPOI了。 NPOI在之前.net framework的时候，工程需要用到Excel的导入导出">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/6.png">
+<meta property="og:updated_time" content="2022-04-23T16:36:29.436Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="net core WebApi——使用NPOI导入导出操作">
+<meta name="twitter:description" content="前言时间过得好快，在之前升级到3.0之后，就感觉好久没再动过啥东西了，之前有问到Swagger的中文汉化，虽说我觉得这种操作的意义不是太大，也是多少鼓捣了下，其实个人感觉就是元素内容替换，既然可以执行js了那不就是网页上随便搞了，所以就没往下再折腾，但是现在需要用到Excel的操作了，那就不得不提起这个NPOI了。 NPOI在之前.net framework的时候，工程需要用到Excel的导入导出">
+<meta name="twitter:image" content="http://yoursite.com/2019/10/18/net-core-v3-npoi/1.png">
+    <title>net core WebApi——使用NPOI导入导出操作 | D-107 | 3wly 项目开发组自留地</title>
+    <link rel="icon shortcut" type="image/ico" href="/images/favicon.ico">
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/sense.css">
+        
+    
+</head>
+
+
+<body>
+<a id="go-top" class="go-top faa-float animated"></a>
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            
+                <img src="/images/d-107.png" class="logo"/>
+            
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            
+                <li class="nav-link">
+                    <a href="/">
+                        首页
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/archives">
+                        归档
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/about">
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</header>
+
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
+        </div>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/">D-107</a></h1>
+            <p class="site-desc">3wly 项目开发组自留地</p>
+            <p class="social">
+                
+                    <a class="github" target="_blank" href="https://github.com/d-107" title="github"><i class="icon-github"></i></a>
+                
+                    <a class="qq" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d" title="qq"><i class="icon-qq"></i></a>
+                
+                    <a class="mail" target="_blank" href="mailto:m@m-finder.com" title="mail"><i class="icon-mail"></i></a>
+                
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            
+                <ul id="search-tags" data-count="11">
+                    
+                        <li data-url="/tags/test/" >test</li>
+                    
+                        <li data-url="/tags/闲言碎语/" >闲言碎语</li>
+                    
+                        <li data-url="/tags/laravel/" >laravel</li>
+                    
+                        <li data-url="/tags/swoole/" >swoole</li>
+                    
+                        <li data-url="/tags/docker/" >docker</li>
+                    
+                        <li data-url="/tags/net-core/" >net core</li>
+                    
+                        <li data-url="/tags/php/" >php</li>
+                    
+                        <li data-url="/tags/问题记录/" >问题记录</li>
+                    
+                        <li data-url="/tags/vue/" >vue</li>
+                    
+                        <li data-url="/tags/vmware/" >vmware</li>
+                    
+                        <li data-url="/tags/新手向/" >新手向</li>
+                    
+                </ul>
+            
+
+            <ul id="search-articles">
+                
+                    <li data-url="/2020/01/16/wsl2-laradock/" data-date="2020-01-16"
+                        data-name="win10 子系统（wsl2）运行laradock" class="search-article hide">
+                        <a href="/2020/01/16/wsl2-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl2）运行laradock</a>
+                        <span class="post-time">2020-01-16</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2020/01/14/wsl-laradock/" data-date="2020-01-14"
+                        data-name="win10 子系统（wsl1）运行 laradock" class="search-article hide">
+                        <a href="/2020/01/14/wsl-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl1）运行 laradock</a>
+                        <span class="post-time">2020-01-14</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/10/net-core-april-util-update-1/" data-date="2019-11-10"
+                        data-name="net core WebApi——April.Util更新之权限" class="search-article hide">
+                        <a href="/2019/11/10/net-core-april-util-update-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——April.Util更新之权限</a>
+                        <span class="post-time">2019-11-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/07/net-core-april-util/" data-date="2019-11-07"
+                        data-name="net core WebApi——公用库April.Util公开及发布" class="search-article hide">
+                        <a href="/2019/11/07/net-core-april-util/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——公用库April.Util公开及发布</a>
+                        <span class="post-time">2019-11-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/05/net-core-unittest/" data-date="2019-11-05"
+                        data-name="net core WebApi——使用xUnits来实现单元测试" class="search-article hide">
+                        <a href="/2019/11/05/net-core-unittest/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用xUnits来实现单元测试</a>
+                        <span class="post-time">2019-11-05</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/29/net-core-v3-publish/" data-date="2019-10-29"
+                        data-name="向net core 3.0进击——多平台项目发布与部署" class="search-article hide">
+                        <a href="/2019/10/29/net-core-v3-publish/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——多平台项目发布与部署</a>
+                        <span class="post-time">2019-10-29</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/laravel-vue-svg/" data-date="2019-10-28"
+                        data-name="在 laravel vue 中使用 svg 图标" class="search-article hide">
+                        <a href="/2019/10/28/laravel-vue-svg/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laravel vue 中使用 svg 图标</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/vmare-docker/" data-date="2019-10-28"
+                        data-name="Linux配置部署_新手向（五）——Docker的安装与使用" class="search-article hide">
+                        <a href="/2019/10/28/vmare-docker/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（五）——Docker的安装与使用</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/24/another-year-1024/" data-date="2019-10-24"
+                        data-name="又是一年1024" class="search-article hide">
+                        <a href="/2019/10/24/another-year-1024/" class="search-article-name"><i class="icon-quo-left icon"></i>又是一年1024</a>
+                        <span class="post-time">2019-10-24</span>
+                        
+                            <span data-url="/tags/闲言碎语/" data-name="闲言碎语" class="search-articles-tag">闲言碎语</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/18/net-core-v3-npoi/" data-date="2019-10-18"
+                        data-name="net core WebApi——使用NPOI导入导出操作" class="search-article hide">
+                        <a href="/2019/10/18/net-core-v3-npoi/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用NPOI导入导出操作</a>
+                        <span class="post-time">2019-10-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/12/laravel-swoole-socket-in-laradock/" data-date="2019-10-12"
+                        data-name="在 laradock 环境中使用 laravel-swoole 的 websocket" class="search-article hide">
+                        <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 的 websocket</a>
+                        <span class="post-time">2019-10-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/09/net-core-v3-april-webapi/" data-date="2019-10-09"
+                        data-name="向net core 3.0进击——April.WebApi从2.2爬到3.0" class="search-article hide">
+                        <a href="/2019/10/09/net-core-v3-april-webapi/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——April.WebApi从2.2爬到3.0</a>
+                        <span class="post-time">2019-10-09</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/07/net-core-v3-swagger/" data-date="2019-10-07"
+                        data-name="向net core 3.0进击——Swagger的改变" class="search-article hide">
+                        <a href="/2019/10/07/net-core-v3-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——Swagger的改变</a>
+                        <span class="post-time">2019-10-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/26/net-core-quartz/" data-date="2019-09-26"
+                        data-name="net core WebApi——定时任务Quartz" class="search-article hide">
+                        <a href="/2019/09/26/net-core-quartz/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——定时任务Quartz</a>
+                        <span class="post-time">2019-09-26</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/23/net-core-redis/" data-date="2019-09-23"
+                        data-name="net core WebApi——缓存神器Redis" class="search-article hide">
+                        <a href="/2019/09/23/net-core-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——缓存神器Redis</a>
+                        <span class="post-time">2019-09-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-redis/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（四）——Redis安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（四）——Redis安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-mysql/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（三）——MySql安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-mysql/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（三）——MySql安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/04/Hello-Dotnet/" data-date="2019-09-04"
+                        data-name="Hello Dotnet" class="search-article hide">
+                        <a href="/2019/09/04/Hello-Dotnet/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello Dotnet</a>
+                        <span class="post-time">2019-09-04</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/03/hello-php/" data-date="2019-09-03"
+                        data-name="Hello PHP" class="search-article hide">
+                        <a href="/2019/09/03/hello-php/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello PHP</a>
+                        <span class="post-time">2019-09-03</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/02/net-core-qywx-application/" data-date="2019-09-02"
+                        data-name="net core WebApi——尝试企业微信来开发企业内部应用" class="search-article hide">
+                        <a href="/2019/09/02/net-core-qywx-application/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——尝试企业微信来开发企业内部应用</a>
+                        <span class="post-time">2019-09-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/27/net-core-filedownload/" data-date="2019-08-27"
+                        data-name="net core WebApi——文件分片下载" class="search-article hide">
+                        <a href="/2019/08/27/net-core-filedownload/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片下载</a>
+                        <span class="post-time">2019-08-27</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/net-core-fileuploader-and-cors/" data-date="2019-08-23"
+                        data-name="net core WebApi——文件分片上传与跨域请求处理" class="search-article hide">
+                        <a href="/2019/08/23/net-core-fileuploader-and-cors/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片上传与跨域请求处理</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/laravel-swoole-in-laradock/" data-date="2019-08-23"
+                        data-name="在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用" class="search-article hide">
+                        <a href="/2019/08/23/laravel-swoole-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-nginx/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（二）——Nginx安装与配置" class="search-article hide">
+                        <a href="/2019/08/21/vmware-nginx/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（二）——Nginx安装与配置</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-use-centos/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（一）——CentOS系统安装" class="search-article hide">
+                        <a href="/2019/08/21/vmware-use-centos/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（一）——CentOS系统安装</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/02/use-laravel-permission-can-tag-in-vue/" data-date="2019-08-02"
+                        data-name="在vue中使用laravel-permission的@can标签" class="search-article hide">
+                        <a href="/2019/08/02/use-laravel-permission-can-tag-in-vue/" class="search-article-name"><i class="icon-quo-left icon"></i>在vue中使用laravel-permission的@can标签</a>
+                        <span class="post-time">2019-08-02</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/vue/" data-name="vue" class="search-articles-tag">vue</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/01/net-core-aop-2/" data-date="2019-08-01"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2" class="search-article hide">
+                        <a href="/2019/08/01/net-core-aop-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2</a>
+                        <span class="post-time">2019-08-01</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/30/net-core-aop-1/" data-date="2019-07-30"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1" class="search-article hide">
+                        <a href="/2019/07/30/net-core-aop-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>
+                        <span class="post-time">2019-07-30</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-sqlsugar-2/" data-date="2019-07-19"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 2" class="search-article hide">
+                        <a href="/2019/07/19/net-core-sqlsugar-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 2</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-webapi-main/" data-date="2019-07-19"
+                        data-name="net core Webapi 总目录" class="search-article hide">
+                        <a href="/2019/07/19/net-core-webapi-main/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi 总目录</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/18/net-core-sqlsugar-1/" data-date="2019-07-18"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 1" class="search-article hide">
+                        <a href="/2019/07/18/net-core-sqlsugar-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 1</a>
+                        <span class="post-time">2019-07-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/11/tp5-fileupload-requestfile-is-null/" data-date="2019-07-11"
+                        data-name="tp5文件上传$_FILES有值request中file却为空" class="search-article hide">
+                        <a href="/2019/07/11/tp5-fileupload-requestfile-is-null/" class="search-article-name"><i class="icon-quo-left icon"></i>tp5文件上传$_FILES有值request中file却为空</a>
+                        <span class="post-time">2019-07-11</span>
+                        
+                            <span data-url="/tags/php/" data-name="php" class="search-articles-tag">php</span>
+                        
+                            <span data-url="/tags/问题记录/" data-name="问题记录" class="search-articles-tag">问题记录</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/10/net-core-cache/" data-date="2019-07-10"
+                        data-name="net core Webapi基础工程搭建（五）——缓存机制" class="search-article hide">
+                        <a href="/2019/07/10/net-core-cache/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（五）——缓存机制</a>
+                        <span class="post-time">2019-07-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/04/net-core-log4net/" data-date="2019-07-04"
+                        data-name="net core Webapi基础工程搭建（四）——日志功能log4net" class="search-article hide">
+                        <a href="/2019/07/04/net-core-log4net/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（四）——日志功能log4net</a>
+                        <span class="post-time">2019-07-04</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-swagger/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（三）——在线接口文档Swagger" class="search-article hide">
+                        <a href="/2019/07/02/net-core-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（三）——在线接口文档Swagger</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-createprogram/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（二）——创建工程" class="search-article hide">
+                        <a href="/2019/07/02/net-core-createprogram/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（二）——创建工程</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-tools-and-environment/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（一）——开发工具及环境" class="search-article hide">
+                        <a href="/2019/07/02/net-core-tools-and-environment/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（一）——开发工具及环境</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/12/laravel-broadcasting/" data-date="2019-04-12"
+                        data-name="laravel 广播系统学习" class="search-article hide">
+                        <a href="/2019/04/12/laravel-broadcasting/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 广播系统学习</a>
+                        <span class="post-time">2019-04-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/09/laravel-queues/" data-date="2019-04-09"
+                        data-name="laravel 队列学习" class="search-article hide">
+                        <a href="/2019/04/09/laravel-queues/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 队列学习</a>
+                        <span class="post-time">2019-04-09</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/03/laravel-events/" data-date="2019-04-03"
+                        data-name="laravel 事件系统学习" class="search-article hide">
+                        <a href="/2019/04/03/laravel-events/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 事件系统学习</a>
+                        <span class="post-time">2019-04-03</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/03/15/laravel-mix/" data-date="2019-03-15"
+                        data-name="使用 laravel mix 编译资源" class="search-article hide">
+                        <a href="/2019/03/15/laravel-mix/" class="search-article-name"><i class="icon-quo-left icon"></i>使用 laravel mix 编译资源</a>
+                        <span class="post-time">2019-03-15</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2018/02/13/hello-world/" data-date="2018-02-13"
+                        data-name="Hello World" class="search-article hide">
+                        <a href="/2018/02/13/hello-world/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello World</a>
+                        <span class="post-time">2018-02-13</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+  <section class="content-inner">
+    <article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title">net core WebApi——使用NPOI导入导出操作</h1>
+    </header>
+
+    <div class="article-entry">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>时间过得好快，在之前升级到3.0之后，就感觉好久没再动过啥东西了，之前有问到Swagger的中文汉化，虽说我觉得这种操作的意义不是太大，也是多少鼓捣了下，其实个人感觉就是元素内容替换，既然可以执行js了那不就是网页上随便搞了，所以就没往下再折腾，但是现在需要用到Excel的操作了，那就不得不提起这个<strong>NPOI</strong>了。</p>
+<h3 id="NPOI"><a href="#NPOI" class="headerlink" title="NPOI"></a>NPOI</h3><p>在之前.net framework的时候，工程需要用到Excel的导入导出，当然用这个NPOI是偶然，也就是找了下这个看着可以就用了，之后遇到的各种问题也都找资料解决，什么多行合并啊，打开2007版本错误啊之类的，但是不得不说，用着还挺好，所以既然net core需要了，那就看看呗，刚好也是支持的。</p>
+<p>在<strong>Util</strong>我们来引入这个类库<strong>NPOI</strong>。<img src="/2019/10/18/net-core-v3-npoi/1.png" alt="引入"></p>
+<ul>
+<li><strong>导入</strong></li>
+</ul>
+<p>在使用之前，我们先缕一下获取Excel数据需要哪些准备操作。</p>
+<ol>
+<li>获取文件（这个就不多说）</li>
+<li>获取sheet信息（考虑有可能多sheet操作）</li>
+<li>根据sheet获取对应文件信息（多少行，当然有些还有合并）</li>
+<li>根据合并行来判断第一行是否为标题</li>
+<li>判断哪一行是列名（用于对应数据）</li>
+<li>遍历每一行并根据每一行的数据格式来获取（有可能是公式/日期/数字/普通文本等等）</li>
+</ol>
+<p>ok，大致上清楚了之后，我们就一步步来看吧，这里我创建一个<strong>ExcelUtil</strong>，来写第一个方法（这里只做说明展示吧）。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">ExcelUtil</span></span><br><span class="line">   &#123;</span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 读取Excel多Sheet数据</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="filePath"&gt;</span>文件路径<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="sheetName"&gt;</span>Sheet名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> DataSet <span class="title">ReadExcelToDataSet</span>(<span class="params"><span class="keyword">string</span> filePath, <span class="keyword">string</span> sheetName = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           <span class="keyword">if</span> (!File.Exists(filePath))</span><br><span class="line">           &#123;</span><br><span class="line">               LogUtil.Debug(<span class="string">$"未找到文件<span class="subst">&#123;filePath&#125;</span>"</span>);</span><br><span class="line">               <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//获取文件信息</span></span><br><span class="line">           FileStream fs = <span class="keyword">new</span> FileStream(filePath, FileMode.Open, FileAccess.Read);</span><br><span class="line">           IWorkbook workbook = WorkbookFactory.Create(fs);</span><br><span class="line">           <span class="comment">//获取sheet信息</span></span><br><span class="line">           ISheet sheet = <span class="literal">null</span>;</span><br><span class="line">           DataSet ds = <span class="keyword">new</span> DataSet();</span><br><span class="line">           <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(sheetName))</span><br><span class="line">           &#123;</span><br><span class="line">               sheet = workbook.GetSheet(sheetName);</span><br><span class="line">               <span class="keyword">if</span> (sheet == <span class="literal">null</span>)</span><br><span class="line">               &#123;</span><br><span class="line">                   LogUtil.Debug(<span class="string">$"<span class="subst">&#123;filePath&#125;</span>未找到sheet:<span class="subst">&#123;sheetName&#125;</span>"</span>);</span><br><span class="line">                   <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">               &#125;</span><br><span class="line">               DataTable dt = ReadExcelFunc(workbook, sheet);</span><br><span class="line">               ds.Tables.Add(dt);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">else</span></span><br><span class="line">           &#123;</span><br><span class="line">               <span class="comment">//遍历获取所有数据</span></span><br><span class="line">               <span class="keyword">int</span> sheetCount = workbook.NumberOfSheets;</span><br><span class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; sheetCount; i++) &#123;</span><br><span class="line">                   sheet = workbook.GetSheetAt(i);</span><br><span class="line">                   <span class="keyword">if</span> (sheet != <span class="literal">null</span>)</span><br><span class="line">                   &#123;</span><br><span class="line">                       DataTable dt = ReadExcelFunc(workbook, sheet);</span><br><span class="line">                       ds.Tables.Add(dt);</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">return</span> ds;</span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> 读取Excel信息</span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="workbook"&gt;</span>工作区<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="sheet"&gt;</span>sheet<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">       <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">       <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> DataTable <span class="title">ReadExcelFunc</span>(<span class="params">IWorkbook workbook, ISheet sheet</span>)</span></span><br><span class="line"><span class="function"></span>       &#123;</span><br><span class="line">           DataTable dt = <span class="keyword">new</span> DataTable();</span><br><span class="line">           <span class="comment">//获取列信息</span></span><br><span class="line">           IRow cells = sheet.GetRow(sheet.FirstRowNum);</span><br><span class="line">           <span class="keyword">int</span> cellsCount = cells.PhysicalNumberOfCells;</span><br><span class="line">           <span class="keyword">int</span> emptyCount = <span class="number">0</span>;</span><br><span class="line">           <span class="keyword">int</span> cellIndex = sheet.FirstRowNum;</span><br><span class="line">           List&lt;<span class="keyword">string</span>&gt; listColumns = <span class="keyword">new</span> List&lt;<span class="keyword">string</span>&gt;();</span><br><span class="line">           <span class="keyword">bool</span> isFindColumn = <span class="literal">false</span>;</span><br><span class="line">           <span class="keyword">while</span> (!isFindColumn)</span><br><span class="line">           &#123;</span><br><span class="line">               emptyCount = <span class="number">0</span>;</span><br><span class="line">               listColumns.Clear();</span><br><span class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cellsCount; i++)</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(cells.GetCell(i).StringCellValue))</span><br><span class="line">                   &#123;</span><br><span class="line">                       emptyCount++;</span><br><span class="line">                   &#125;</span><br><span class="line">                   listColumns.Add(cells.GetCell(i).StringCellValue);</span><br><span class="line">               &#125;</span><br><span class="line">               <span class="comment">//这里根据逻辑需要，空列超过多少判断</span></span><br><span class="line">               <span class="keyword">if</span> (emptyCount == <span class="number">0</span>)</span><br><span class="line">               &#123;</span><br><span class="line">                   isFindColumn = <span class="literal">true</span>;</span><br><span class="line">               &#125;</span><br><span class="line">               cellIndex++;</span><br><span class="line">               cells = sheet.GetRow(cellIndex);</span><br><span class="line">           &#125;</span><br><span class="line"></span><br><span class="line">           <span class="keyword">foreach</span> (<span class="keyword">string</span> columnName <span class="keyword">in</span> listColumns)</span><br><span class="line">           &#123;</span><br><span class="line">               <span class="keyword">if</span> (dt.Columns.Contains(columnName))</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="comment">//如果允许有重复列名，自己做处理</span></span><br><span class="line">                   <span class="keyword">continue</span>;</span><br><span class="line">               &#125;</span><br><span class="line">               dt.Columns.Add(columnName, <span class="keyword">typeof</span>(<span class="keyword">string</span>));</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="comment">//开始获取数据</span></span><br><span class="line">           <span class="keyword">int</span> rowsCount = sheet.PhysicalNumberOfRows;</span><br><span class="line">           cellIndex += <span class="number">1</span>;</span><br><span class="line">           DataRow dr = <span class="literal">null</span>;</span><br><span class="line">           <span class="keyword">for</span> (<span class="keyword">int</span> i = cellIndex; i &lt; rowsCount; i++) &#123;</span><br><span class="line">               cells = sheet.GetRow(i);</span><br><span class="line">               dr = dt.NewRow();</span><br><span class="line">               <span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; dt.Columns.Count; j++)</span><br><span class="line">               &#123;</span><br><span class="line">                   <span class="comment">//这里可以判断数据类型</span></span><br><span class="line">                   <span class="keyword">switch</span> (cells.GetCell(j).CellType)</span><br><span class="line">                   &#123;</span><br><span class="line">                       <span class="keyword">case</span> CellType.String:</span><br><span class="line">                           dr[j] = cells.GetCell(j).StringCellValue;</span><br><span class="line">                           <span class="keyword">break</span>;</span><br><span class="line">                       <span class="keyword">case</span> CellType.Numeric:</span><br><span class="line">                           dr[j] = cells.GetCell(j).NumericCellValue.ToString();</span><br><span class="line">                           <span class="keyword">break</span>;</span><br><span class="line">                       <span class="keyword">case</span> CellType.Unknown:</span><br><span class="line">                           dr[j] = cells.GetCell(j).StringCellValue;</span><br><span class="line">                           <span class="keyword">break</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;</span><br><span class="line">               dt.Rows.Add(dr);</span><br><span class="line">           &#125;</span><br><span class="line">           <span class="keyword">return</span> dt;</span><br><span class="line">       &#125;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>文件的导入操作就不再演示了，之前有文件上传的相关操作方法<a href="/2019/08/23/net-core-fileuploader-and-cors/">net core WebApi——文件分片上传与跨域请求处理</a>。</p>
+<p>导入的处理这里也只是大致演示下，具体需要的东西包括情况可能会比较复杂，但是终归数据还是那些，只是操作方法不同罢了（别说什么骚操作）。</p>
+<ul>
+<li><strong>导出</strong></li>
+</ul>
+<p>相对于导入，导出的流程就比较简单了。</p>
+<ol>
+<li>获取数据信息（sql或文件）</li>
+<li>组成数据集合（List或DataTable）</li>
+<li>创建sheet</li>
+<li>设置相关样式等等</li>
+<li>遍历赋值row</li>
+<li>导出文件流</li>
+</ol>
+<p>了解完，我们就继续来搞吧。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 导出Excel文件</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;typeparam name="T"&gt;</span>数据类型<span class="doctag">&lt;/typeparam&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="entities"&gt;</span>数据实体<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="dicColumns"&gt;</span>列对应关系,如Name-&gt;姓名<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="title"&gt;</span>标题<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">      <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">byte</span>[] ExportExcel&lt;T&gt;(List&lt;T&gt; entities,Dictionary&lt;<span class="keyword">string</span>,<span class="keyword">string</span>&gt; dicColumns, <span class="keyword">string</span> title = <span class="literal">null</span>)</span><br><span class="line">      &#123;</span><br><span class="line">          <span class="keyword">if</span> (entities.Count &lt;= <span class="number">0</span>)</span><br><span class="line">          &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="literal">null</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">//HSSFWorkbook =&gt; xls</span></span><br><span class="line">          <span class="comment">//XSSFWorkbook =&gt; xlsx</span></span><br><span class="line">          IWorkbook workbook = <span class="keyword">new</span> XSSFWorkbook();</span><br><span class="line">          ISheet sheet = workbook.CreateSheet(<span class="string">"test"</span>);<span class="comment">//名称自定义</span></span><br><span class="line">          IRow cellsColumn = <span class="literal">null</span>;</span><br><span class="line">          IRow cellsData = <span class="literal">null</span>;</span><br><span class="line">          <span class="comment">//获取实体属性名</span></span><br><span class="line">          PropertyInfo[] properties = entities[<span class="number">0</span>].GetType().GetProperties();</span><br><span class="line">          <span class="keyword">int</span> cellsIndex = <span class="number">0</span>;</span><br><span class="line">          <span class="comment">//标题</span></span><br><span class="line">          <span class="keyword">if</span> (!<span class="keyword">string</span>.IsNullOrEmpty(title))</span><br><span class="line">          &#123;</span><br><span class="line">              ICellStyle style = workbook.CreateCellStyle();</span><br><span class="line">              <span class="comment">//边框  </span></span><br><span class="line">              style.BorderBottom = BorderStyle.Dotted;</span><br><span class="line">              style.BorderLeft = BorderStyle.Hair;</span><br><span class="line">              style.BorderRight = BorderStyle.Hair;</span><br><span class="line">              style.BorderTop = BorderStyle.Dotted;</span><br><span class="line">              <span class="comment">//水平对齐  </span></span><br><span class="line">              style.Alignment = HorizontalAlignment.Left;</span><br><span class="line"></span><br><span class="line">              <span class="comment">//垂直对齐  </span></span><br><span class="line">              style.VerticalAlignment = VerticalAlignment.Center;</span><br><span class="line"></span><br><span class="line">              <span class="comment">//设置字体</span></span><br><span class="line">              IFont font = workbook.CreateFont();</span><br><span class="line">              font.FontHeightInPoints = <span class="number">10</span>;</span><br><span class="line">              font.FontName = <span class="string">"微软雅黑"</span>;</span><br><span class="line">              style.SetFont(font);</span><br><span class="line"></span><br><span class="line">              IRow cellsTitle = sheet.CreateRow(<span class="number">0</span>);</span><br><span class="line">              cellsTitle.CreateCell(<span class="number">0</span>).SetCellValue(title);</span><br><span class="line">              cellsTitle.RowStyle = style;</span><br><span class="line">              <span class="comment">//合并单元格</span></span><br><span class="line">              sheet.AddMergedRegion(<span class="keyword">new</span> NPOI.SS.Util.CellRangeAddress(<span class="number">0</span>, <span class="number">1</span>, <span class="number">0</span>, dicColumns.Count - <span class="number">1</span>));</span><br><span class="line">              cellsIndex = <span class="number">2</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="comment">//列名</span></span><br><span class="line">          cellsColumn = sheet.CreateRow(cellsIndex);</span><br><span class="line">          <span class="keyword">int</span> index = <span class="number">0</span>;</span><br><span class="line">          Dictionary&lt;<span class="keyword">string</span>, <span class="keyword">int</span>&gt; columns = <span class="keyword">new</span> Dictionary&lt;<span class="keyword">string</span>, <span class="keyword">int</span>&gt;();</span><br><span class="line">          <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> dicColumns)</span><br><span class="line">          &#123;</span><br><span class="line">              cellsColumn.CreateCell(index).SetCellValue(item.Value);</span><br><span class="line">              columns.Add(item.Value, index);</span><br><span class="line">              index++;</span><br><span class="line">          &#125;</span><br><span class="line">          cellsIndex += <span class="number">1</span>;</span><br><span class="line">          <span class="comment">//数据</span></span><br><span class="line">          <span class="keyword">foreach</span> (<span class="keyword">var</span> item <span class="keyword">in</span> entities)</span><br><span class="line">          &#123;</span><br><span class="line">              cellsData = sheet.CreateRow(cellsIndex);</span><br><span class="line">              <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; properties.Length; i++)</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="keyword">if</span> (!dicColumns.ContainsKey(properties[i].Name)) <span class="keyword">continue</span>;</span><br><span class="line">                  <span class="comment">//这里可以也根据数据类型做不同的赋值，也可以根据不同的格式参考上面的ICellStyle设置不同的样式</span></span><br><span class="line">                  <span class="keyword">object</span>[] entityValues = <span class="keyword">new</span> <span class="keyword">object</span>[properties.Length];</span><br><span class="line">                  entityValues[i] = properties[i].GetValue(item);</span><br><span class="line">                  <span class="comment">//获取对应列下标</span></span><br><span class="line">                  index = columns[dicColumns[properties[i].Name]];</span><br><span class="line">                  cellsData.CreateCell(index).SetCellValue(entityValues[i].ToString());</span><br><span class="line">              &#125;</span><br><span class="line">              cellsIndex++;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">byte</span>[] buffer = <span class="literal">null</span>;</span><br><span class="line">          <span class="keyword">using</span> (MemoryStream ms = <span class="keyword">new</span> MemoryStream())</span><br><span class="line">          &#123;</span><br><span class="line">              workbook.Write(ms);</span><br><span class="line">              buffer = ms.GetBuffer();</span><br><span class="line">              ms.Close();</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="keyword">return</span> buffer;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>写完，免不了一通测试，这里不多说了，直接上图。</p>
+<p>导入这里前面也说了没做界面上传什么的，就是一个文件路径，直接执行，Excel原文件我也会同步上传到代码仓库。<br><img src="/2019/10/18/net-core-v3-npoi/2.png" alt="测试导入"></p>
+<p>导出的话，这里也是用Swagger神器来测试。<br><img src="/2019/10/18/net-core-v3-npoi/3.png" alt="测试导出"><br>数据库数据如下图。<br><img src="/2019/10/18/net-core-v3-npoi/4.png" alt="测试"></p>
+<p><img src="/2019/10/18/net-core-v3-npoi/5.png" alt="测试导出"></p>
+<p>带标题导出。<br><img src="/2019/10/18/net-core-v3-npoi/6.png" alt="测试"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>最近真的是有点儿忙，一直在鼓捣opengl这类图形化的东西，各种矩阵转换模型转换，要么是用c++，qt写opengl，要么是用threejs搞opengl，唉，整的最近也只能是晚上回去摸索会儿net core，<strong>工作总是不那么尽如人意，但是身为程序猿的我们，不都是不断的摸索前进么？我们可以不会，但那不是我们不整的借口。</strong></p>
+
+    </div>
+    
+    
+        <nav id="article-nav">
+            
+                <a href="/2019/10/24/another-year-1024/" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        
+                            又是一年1024
+                        
+                    </div>
+                </a>
+            
+            
+                <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title">在 laradock 环境中使用 laravel-swoole 的 websocket</div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            
+        </nav>
+    
+    <aside id="article-toc" role="navigation" class="article-toc fixed">
+    <div id="article-toc-inner" class="article-toc-inner">
+        <strong class="sidebar-title">
+        目录</strong>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#NPOI"><span class="toc-text">NPOI</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li></ol>
+    </div>
+</aside>
+</article>
+
+<div id="container"></div>
+
+
+
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: 'oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI',
+            appKey: 'egs7BlX8kO6FuIdaXxDvhe07',
+            notify: 'false',
+            verify: 'false',
+            avatar:'mp',
+            placeholder: '来啊，快活啊 (๑•ᴗ•๑)'
+        })
+    </script>
+
+
+
+
+
+  </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; 2022 D-107
+        </div>
+        <div class="site-nav">
+            
+                <li class="nav-link">
+                    <a href="https://www.m-finder.com" target="_blank">M-finder</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://www.cnblogs.com/AprilBlank/" target="_blank">AprilBlank</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://blog.csdn.net/qq_27948659" target="_blank">大白</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://www.sgclzqq.com/" target="_blank">Sgclzqq</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://93xiaosi.github.io/" target="_blank">Wait</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://thekingstyle.github.io/" target="_blank">WangWeiQiang</a>
+                </li>
+            
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+        <script src="/js/jquery-3.4.1.min.js"></script>
+    
+        <script src="/js/sense.js"></script>
+    
+        <script src="/js/image-view.js"></script>
+    
+
+
+
+    <script src="/js/firework.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":200},"mobile":{"show":false},"log":false});</script></body>
+</html>

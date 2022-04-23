@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="前言在之前整理完一套简单的后台基础工程后，因为业务需要鼓捣了文件上传跟下载，整理完后就迫不及待的想分享出来，希望有用到文件相关操作的朋友可以得到些帮助。 开始我们依然用我们的基础工程，之前也提到过后续如果有测试功能之类的东西，会一直不断的更新这套代码（如果搞炸了之后那就…），首先我们需要理一下文件分片上传的思路：  后端   接收前端文件上传请求并处理回调 根据前端传递的钥匙判断，允许后开始接收文">
+<meta name="keywords" content="net core">
+<meta property="og:type" content="article">
+<meta property="og:title" content="net core WebApi——文件分片上传与跨域请求处理">
+<meta property="og:url" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/index.html">
+<meta property="og:site_name" content="D-107">
+<meta property="og:description" content="前言在之前整理完一套简单的后台基础工程后，因为业务需要鼓捣了文件上传跟下载，整理完后就迫不及待的想分享出来，希望有用到文件相关操作的朋友可以得到些帮助。 开始我们依然用我们的基础工程，之前也提到过后续如果有测试功能之类的东西，会一直不断的更新这套代码（如果搞炸了之后那就…），首先我们需要理一下文件分片上传的思路：  后端   接收前端文件上传请求并处理回调 根据前端传递的钥匙判断，允许后开始接收文">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/1.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/2.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/3.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/4.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/5.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/6.png">
+<meta property="og:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/7.png">
+<meta property="og:updated_time" content="2022-04-23T16:36:29.416Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="net core WebApi——文件分片上传与跨域请求处理">
+<meta name="twitter:description" content="前言在之前整理完一套简单的后台基础工程后，因为业务需要鼓捣了文件上传跟下载，整理完后就迫不及待的想分享出来，希望有用到文件相关操作的朋友可以得到些帮助。 开始我们依然用我们的基础工程，之前也提到过后续如果有测试功能之类的东西，会一直不断的更新这套代码（如果搞炸了之后那就…），首先我们需要理一下文件分片上传的思路：  后端   接收前端文件上传请求并处理回调 根据前端传递的钥匙判断，允许后开始接收文">
+<meta name="twitter:image" content="http://yoursite.com/2019/08/23/net-core-fileuploader-and-cors/1.png">
+    <title>net core WebApi——文件分片上传与跨域请求处理 | D-107 | 3wly 项目开发组自留地</title>
+    <link rel="icon shortcut" type="image/ico" href="/images/favicon.ico">
+    
+        <!-- stylesheets list from config.yml -->
+        
+        <link rel="stylesheet" href="/css/sense.css">
+        
+    
+</head>
+
+
+<body>
+<a id="go-top" class="go-top faa-float animated"></a>
+<div class="scrollbar" id="bar" style="width: 0%; "></div>
+<header class="header">
+    <div class="header-nav">
+        <a class="site-logo" href="/">
+            
+                <img src="/images/d-107.png" class="logo"/>
+            
+        </a>
+
+        <div class="search-toggle-btn"><i class="iconfont">&#xe608;</i></div>
+        <div class="nav-toggle-btn"><i class="iconfont">&#xe600;</i></div>
+        <ul class="site-nav ">
+            
+                <li class="nav-link">
+                    <a href="/">
+                        首页
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/archives">
+                        归档
+                    </a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="/about">
+                        关于
+                    </a>
+                </li>
+            
+        </ul>
+    </div>
+</header>
+
+<section class="video-box">
+    <div class="video">
+        <div class="video-frame">
+            <img src="/images/overlay-hero.png" alt="Decorative image frame">
+        </div>
+        <div class="video-media">
+            <video playsinline="" autoplay="" loop="" muted="" data-autoplay=""
+                   poster="/images/sense.png" x5-video-player-type="h5">
+                <source src="/video/sense.mp4" type="video/mp4">
+                <source src="/video/sense.ogv" type="video/ogg">
+                <source src="/video/sense.webm" type="video/webm">
+                <p>Your user agent does not support the HTML5 Video element.</p>
+            </video>
+            <div class="video-overlay"></div>
+        </div>
+        <div class="video-inner text-center text-white">
+            <h1 class="site-title"><a  href="/">D-107</a></h1>
+            <p class="site-desc">3wly 项目开发组自留地</p>
+            <p class="social">
+                
+                    <a class="github" target="_blank" href="https://github.com/d-107" title="github"><i class="icon-github"></i></a>
+                
+                    <a class="qq" target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=7221c889336da3d56c33380b59c0883ea67d0c15f6883fa50d4478ff136a1e0d" title="qq"><i class="icon-qq"></i></a>
+                
+                    <a class="mail" target="_blank" href="mailto:m@m-finder.com" title="mail"><i class="icon-mail"></i></a>
+                
+            </p>
+        </div>
+    </div>
+</section>
+
+
+
+<div id="search" class="">
+    <div class="search-inner">
+        <div class="search-inner-wrap">
+            <div class="search-input-inner">
+                <input id="txtsearch" class="search-input" placeholder="写点儿什么吧" />
+            </div>
+            
+                <ul id="search-tags" data-count="11">
+                    
+                        <li data-url="/tags/test/" >test</li>
+                    
+                        <li data-url="/tags/闲言碎语/" >闲言碎语</li>
+                    
+                        <li data-url="/tags/laravel/" >laravel</li>
+                    
+                        <li data-url="/tags/swoole/" >swoole</li>
+                    
+                        <li data-url="/tags/docker/" >docker</li>
+                    
+                        <li data-url="/tags/net-core/" >net core</li>
+                    
+                        <li data-url="/tags/php/" >php</li>
+                    
+                        <li data-url="/tags/问题记录/" >问题记录</li>
+                    
+                        <li data-url="/tags/vue/" >vue</li>
+                    
+                        <li data-url="/tags/vmware/" >vmware</li>
+                    
+                        <li data-url="/tags/新手向/" >新手向</li>
+                    
+                </ul>
+            
+
+            <ul id="search-articles">
+                
+                    <li data-url="/2020/01/16/wsl2-laradock/" data-date="2020-01-16"
+                        data-name="win10 子系统（wsl2）运行laradock" class="search-article hide">
+                        <a href="/2020/01/16/wsl2-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl2）运行laradock</a>
+                        <span class="post-time">2020-01-16</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2020/01/14/wsl-laradock/" data-date="2020-01-14"
+                        data-name="win10 子系统（wsl1）运行 laradock" class="search-article hide">
+                        <a href="/2020/01/14/wsl-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>win10 子系统（wsl1）运行 laradock</a>
+                        <span class="post-time">2020-01-14</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/10/net-core-april-util-update-1/" data-date="2019-11-10"
+                        data-name="net core WebApi——April.Util更新之权限" class="search-article hide">
+                        <a href="/2019/11/10/net-core-april-util-update-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——April.Util更新之权限</a>
+                        <span class="post-time">2019-11-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/07/net-core-april-util/" data-date="2019-11-07"
+                        data-name="net core WebApi——公用库April.Util公开及发布" class="search-article hide">
+                        <a href="/2019/11/07/net-core-april-util/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——公用库April.Util公开及发布</a>
+                        <span class="post-time">2019-11-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/11/05/net-core-unittest/" data-date="2019-11-05"
+                        data-name="net core WebApi——使用xUnits来实现单元测试" class="search-article hide">
+                        <a href="/2019/11/05/net-core-unittest/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用xUnits来实现单元测试</a>
+                        <span class="post-time">2019-11-05</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/29/net-core-v3-publish/" data-date="2019-10-29"
+                        data-name="向net core 3.0进击——多平台项目发布与部署" class="search-article hide">
+                        <a href="/2019/10/29/net-core-v3-publish/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——多平台项目发布与部署</a>
+                        <span class="post-time">2019-10-29</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/laravel-vue-svg/" data-date="2019-10-28"
+                        data-name="在 laravel vue 中使用 svg 图标" class="search-article hide">
+                        <a href="/2019/10/28/laravel-vue-svg/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laravel vue 中使用 svg 图标</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/28/vmare-docker/" data-date="2019-10-28"
+                        data-name="Linux配置部署_新手向（五）——Docker的安装与使用" class="search-article hide">
+                        <a href="/2019/10/28/vmare-docker/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（五）——Docker的安装与使用</a>
+                        <span class="post-time">2019-10-28</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/24/another-year-1024/" data-date="2019-10-24"
+                        data-name="又是一年1024" class="search-article hide">
+                        <a href="/2019/10/24/another-year-1024/" class="search-article-name"><i class="icon-quo-left icon"></i>又是一年1024</a>
+                        <span class="post-time">2019-10-24</span>
+                        
+                            <span data-url="/tags/闲言碎语/" data-name="闲言碎语" class="search-articles-tag">闲言碎语</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/18/net-core-v3-npoi/" data-date="2019-10-18"
+                        data-name="net core WebApi——使用NPOI导入导出操作" class="search-article hide">
+                        <a href="/2019/10/18/net-core-v3-npoi/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——使用NPOI导入导出操作</a>
+                        <span class="post-time">2019-10-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/12/laravel-swoole-socket-in-laradock/" data-date="2019-10-12"
+                        data-name="在 laradock 环境中使用 laravel-swoole 的 websocket" class="search-article hide">
+                        <a href="/2019/10/12/laravel-swoole-socket-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 的 websocket</a>
+                        <span class="post-time">2019-10-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/09/net-core-v3-april-webapi/" data-date="2019-10-09"
+                        data-name="向net core 3.0进击——April.WebApi从2.2爬到3.0" class="search-article hide">
+                        <a href="/2019/10/09/net-core-v3-april-webapi/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——April.WebApi从2.2爬到3.0</a>
+                        <span class="post-time">2019-10-09</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/10/07/net-core-v3-swagger/" data-date="2019-10-07"
+                        data-name="向net core 3.0进击——Swagger的改变" class="search-article hide">
+                        <a href="/2019/10/07/net-core-v3-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>向net core 3.0进击——Swagger的改变</a>
+                        <span class="post-time">2019-10-07</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/26/net-core-quartz/" data-date="2019-09-26"
+                        data-name="net core WebApi——定时任务Quartz" class="search-article hide">
+                        <a href="/2019/09/26/net-core-quartz/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——定时任务Quartz</a>
+                        <span class="post-time">2019-09-26</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/23/net-core-redis/" data-date="2019-09-23"
+                        data-name="net core WebApi——缓存神器Redis" class="search-article hide">
+                        <a href="/2019/09/23/net-core-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——缓存神器Redis</a>
+                        <span class="post-time">2019-09-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-redis/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（四）——Redis安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-redis/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（四）——Redis安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/12/vmware-mysql/" data-date="2019-09-12"
+                        data-name="Linux配置部署_新手向（三）——MySql安装与配置" class="search-article hide">
+                        <a href="/2019/09/12/vmware-mysql/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（三）——MySql安装与配置</a>
+                        <span class="post-time">2019-09-12</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/04/Hello-Dotnet/" data-date="2019-09-04"
+                        data-name="Hello Dotnet" class="search-article hide">
+                        <a href="/2019/09/04/Hello-Dotnet/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello Dotnet</a>
+                        <span class="post-time">2019-09-04</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/03/hello-php/" data-date="2019-09-03"
+                        data-name="Hello PHP" class="search-article hide">
+                        <a href="/2019/09/03/hello-php/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello PHP</a>
+                        <span class="post-time">2019-09-03</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/09/02/net-core-qywx-application/" data-date="2019-09-02"
+                        data-name="net core WebApi——尝试企业微信来开发企业内部应用" class="search-article hide">
+                        <a href="/2019/09/02/net-core-qywx-application/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——尝试企业微信来开发企业内部应用</a>
+                        <span class="post-time">2019-09-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/27/net-core-filedownload/" data-date="2019-08-27"
+                        data-name="net core WebApi——文件分片下载" class="search-article hide">
+                        <a href="/2019/08/27/net-core-filedownload/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片下载</a>
+                        <span class="post-time">2019-08-27</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/net-core-fileuploader-and-cors/" data-date="2019-08-23"
+                        data-name="net core WebApi——文件分片上传与跨域请求处理" class="search-article hide">
+                        <a href="/2019/08/23/net-core-fileuploader-and-cors/" class="search-article-name"><i class="icon-quo-left icon"></i>net core WebApi——文件分片上传与跨域请求处理</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/23/laravel-swoole-in-laradock/" data-date="2019-08-23"
+                        data-name="在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用" class="search-article hide">
+                        <a href="/2019/08/23/laravel-swoole-in-laradock/" class="search-article-name"><i class="icon-quo-left icon"></i>在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</a>
+                        <span class="post-time">2019-08-23</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/swoole/" data-name="swoole" class="search-articles-tag">swoole</span>
+                        
+                            <span data-url="/tags/docker/" data-name="docker" class="search-articles-tag">docker</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-nginx/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（二）——Nginx安装与配置" class="search-article hide">
+                        <a href="/2019/08/21/vmware-nginx/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（二）——Nginx安装与配置</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/21/vmware-use-centos/" data-date="2019-08-21"
+                        data-name="Linux配置部署_新手向（一）——CentOS系统安装" class="search-article hide">
+                        <a href="/2019/08/21/vmware-use-centos/" class="search-article-name"><i class="icon-quo-left icon"></i>Linux配置部署_新手向（一）——CentOS系统安装</a>
+                        <span class="post-time">2019-08-21</span>
+                        
+                            <span data-url="/tags/vmware/" data-name="vmware" class="search-articles-tag">vmware</span>
+                        
+                            <span data-url="/tags/新手向/" data-name="新手向" class="search-articles-tag">新手向</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/02/use-laravel-permission-can-tag-in-vue/" data-date="2019-08-02"
+                        data-name="在vue中使用laravel-permission的@can标签" class="search-article hide">
+                        <a href="/2019/08/02/use-laravel-permission-can-tag-in-vue/" class="search-article-name"><i class="icon-quo-left icon"></i>在vue中使用laravel-permission的@can标签</a>
+                        <span class="post-time">2019-08-02</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                            <span data-url="/tags/vue/" data-name="vue" class="search-articles-tag">vue</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/08/01/net-core-aop-2/" data-date="2019-08-01"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2" class="search-article hide">
+                        <a href="/2019/08/01/net-core-aop-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 2</a>
+                        <span class="post-time">2019-08-01</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/30/net-core-aop-1/" data-date="2019-07-30"
+                        data-name="net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1" class="search-article hide">
+                        <a href="/2019/07/30/net-core-aop-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>
+                        <span class="post-time">2019-07-30</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-sqlsugar-2/" data-date="2019-07-19"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 2" class="search-article hide">
+                        <a href="/2019/07/19/net-core-sqlsugar-2/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 2</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/19/net-core-webapi-main/" data-date="2019-07-19"
+                        data-name="net core Webapi 总目录" class="search-article hide">
+                        <a href="/2019/07/19/net-core-webapi-main/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi 总目录</a>
+                        <span class="post-time">2019-07-19</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/18/net-core-sqlsugar-1/" data-date="2019-07-18"
+                        data-name="net core Webapi基础工程搭建（六）——数据库操作_Part 1" class="search-article hide">
+                        <a href="/2019/07/18/net-core-sqlsugar-1/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（六）——数据库操作_Part 1</a>
+                        <span class="post-time">2019-07-18</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/11/tp5-fileupload-requestfile-is-null/" data-date="2019-07-11"
+                        data-name="tp5文件上传$_FILES有值request中file却为空" class="search-article hide">
+                        <a href="/2019/07/11/tp5-fileupload-requestfile-is-null/" class="search-article-name"><i class="icon-quo-left icon"></i>tp5文件上传$_FILES有值request中file却为空</a>
+                        <span class="post-time">2019-07-11</span>
+                        
+                            <span data-url="/tags/php/" data-name="php" class="search-articles-tag">php</span>
+                        
+                            <span data-url="/tags/问题记录/" data-name="问题记录" class="search-articles-tag">问题记录</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/10/net-core-cache/" data-date="2019-07-10"
+                        data-name="net core Webapi基础工程搭建（五）——缓存机制" class="search-article hide">
+                        <a href="/2019/07/10/net-core-cache/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（五）——缓存机制</a>
+                        <span class="post-time">2019-07-10</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/04/net-core-log4net/" data-date="2019-07-04"
+                        data-name="net core Webapi基础工程搭建（四）——日志功能log4net" class="search-article hide">
+                        <a href="/2019/07/04/net-core-log4net/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（四）——日志功能log4net</a>
+                        <span class="post-time">2019-07-04</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-swagger/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（三）——在线接口文档Swagger" class="search-article hide">
+                        <a href="/2019/07/02/net-core-swagger/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（三）——在线接口文档Swagger</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-createprogram/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（二）——创建工程" class="search-article hide">
+                        <a href="/2019/07/02/net-core-createprogram/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（二）——创建工程</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/07/02/net-core-tools-and-environment/" data-date="2019-07-02"
+                        data-name="net core Webapi基础工程搭建（一）——开发工具及环境" class="search-article hide">
+                        <a href="/2019/07/02/net-core-tools-and-environment/" class="search-article-name"><i class="icon-quo-left icon"></i>net core Webapi基础工程搭建（一）——开发工具及环境</a>
+                        <span class="post-time">2019-07-02</span>
+                        
+                            <span data-url="/tags/net-core/" data-name="net core" class="search-articles-tag">net core</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/12/laravel-broadcasting/" data-date="2019-04-12"
+                        data-name="laravel 广播系统学习" class="search-article hide">
+                        <a href="/2019/04/12/laravel-broadcasting/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 广播系统学习</a>
+                        <span class="post-time">2019-04-12</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/09/laravel-queues/" data-date="2019-04-09"
+                        data-name="laravel 队列学习" class="search-article hide">
+                        <a href="/2019/04/09/laravel-queues/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 队列学习</a>
+                        <span class="post-time">2019-04-09</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/04/03/laravel-events/" data-date="2019-04-03"
+                        data-name="laravel 事件系统学习" class="search-article hide">
+                        <a href="/2019/04/03/laravel-events/" class="search-article-name"><i class="icon-quo-left icon"></i>laravel 事件系统学习</a>
+                        <span class="post-time">2019-04-03</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2019/03/15/laravel-mix/" data-date="2019-03-15"
+                        data-name="使用 laravel mix 编译资源" class="search-article hide">
+                        <a href="/2019/03/15/laravel-mix/" class="search-article-name"><i class="icon-quo-left icon"></i>使用 laravel mix 编译资源</a>
+                        <span class="post-time">2019-03-15</span>
+                        
+                            <span data-url="/tags/laravel/" data-name="laravel" class="search-articles-tag">laravel</span>
+                        
+                    </li>
+                
+                    <li data-url="/2018/02/13/hello-world/" data-date="2018-02-13"
+                        data-name="Hello World" class="search-article hide">
+                        <a href="/2018/02/13/hello-world/" class="search-article-name"><i class="icon-quo-left icon"></i>Hello World</a>
+                        <span class="post-time">2018-02-13</span>
+                        
+                            <span data-url="/tags/test/" data-name="test" class="search-articles-tag">test</span>
+                        
+                    </li>
+                
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="content">
+  <section class="content-inner">
+    <article class="article-detail">
+    <header class="article-header">
+        <h1 class="article-title">net core WebApi——文件分片上传与跨域请求处理</h1>
+    </header>
+
+    <div class="article-entry">
+        <h3 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h3><p>在之前整理完一套简单的后台基础工程后，因为业务需要鼓捣了文件上传跟下载，整理完后就迫不及待的想分享出来，希望有用到文件相关操作的朋友可以得到些帮助。</p>
+<h3 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h3><p>我们依然用我们的基础工程，之前也提到过后续如果有测试功能之类的东西，会一直不断的更新这套代码（如果搞炸了之后那就…），首先我们需要理一下文件分片上传的思路：</p>
+<ul>
+<li><strong>后端</strong></li>
+</ul>
+<ol>
+<li>接收前端文件上传请求并处理回调</li>
+<li>根据前端传递的钥匙判断，允许后开始接收文件流并保存到临时文件夹</li>
+<li>前端最终上传完成后给予后端合并请求（也称作上传完成确认），后端合并文件后判断最终文件是否正确给予回调。</li>
+</ol>
+<ul>
+<li><strong>前端</strong></li>
+</ul>
+<ol>
+<li>读取文件相关信息（名称，扩展类型，大小等基本信息）</li>
+<li>根据需要做片段划分以及文件的md5值（md5主要用于最终确认文件是否缺损）</li>
+<li>请求后端获取钥匙</li>
+<li>拿到钥匙后，我们根据划分的片段去循环上传文件，并根据每次回调判断是否上传成功，如失败则重新上传</li>
+<li>最终循环完成后，给予后端合并请求（上传完成确认）</li>
+</ol>
+<p>ps：这里的钥匙就是个文件名，当然你可以来个token啊什么的根据自己业务需要。</p>
+<blockquote>
+<p>这里还是想分享下敲代码的经验，在我们动手之前，最好把能考虑到的东西全都想好，思路理清也就是打好提纲后，敲代码的效率会高并且错误率也会低，行云流水不是天马行空，而是你的大脑中已经有了山水鸟兽。</p>
+</blockquote>
+<p>OK，流程清楚之后，我们开始动手敲代码吧。</p>
+<p>首先，我们新建一个控制器<strong>FileController</strong>，当然名字可以随意取，根据我们上述后端的思路，新建三个接口<strong>RequestUploadFile</strong>，<strong>FileSave</strong>，<strong>FileMerge</strong>。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">[<span class="meta">Route(<span class="meta-string">"api/[controller]"</span>)</span>]</span><br><span class="line">[<span class="meta">ApiController</span>]</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">FileController</span> : <span class="title">ControllerBase</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 请求上传文件</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="requestFile"&gt;</span>请求上传参数实体<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"RequestUpload"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> MessageEntity <span class="title">RequestUploadFile</span>(<span class="params">[FromBody]RequestFileUploadEntity requestFile</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件上传</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"Upload"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;MessageEntity&gt; <span class="title">FileSave</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件合并</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="fileInfo"&gt;</span>文件参数信息[name]<span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    [<span class="meta">HttpPost, Route(<span class="meta-string">"Merge"</span>)</span>]</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;MessageEntity&gt; <span class="title">FileMerge</span>(<span class="params">[FromBody]Dictionary&lt;<span class="keyword">string</span>, <span class="keyword">object</span>&gt; fileInfo</span>)</span></span><br><span class="line"><span class="function"></span>    &#123;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果直接复制的朋友，这里肯定是满眼红彤彤，这里主要用了两个类，一个请求实体<strong>RequestFileUploadEntity</strong>，一个回调实体<strong>MessageEntity</strong>，这两个我们到Util工程创建（当然也可以放到Entity工程，这里为什么放到Util呢，因为我觉得放到这里公用比较好，毕竟还是有复用的价值的）。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 文件请求上传实体</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">RequestFileUploadEntity</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">long</span> _size = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _filedata = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _fileext = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _filename = <span class="keyword">string</span>.Empty;</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件大小</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">long</span> size &#123; <span class="keyword">get</span> =&gt; _size; <span class="keyword">set</span> =&gt; _size = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 片段数量</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> count &#123; <span class="keyword">get</span> =&gt; _count; <span class="keyword">set</span> =&gt; _count = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件md5</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> filedata &#123; <span class="keyword">get</span> =&gt; _filedata; <span class="keyword">set</span> =&gt; _filedata = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件类型</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> fileext &#123; <span class="keyword">get</span> =&gt; _fileext; <span class="keyword">set</span> =&gt; _fileext = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 文件名</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> filename &#123; <span class="keyword">get</span> =&gt; _filename; <span class="keyword">set</span> =&gt; _filename = <span class="keyword">value</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> 返回实体</span></span><br><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">MessageEntity</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> _Code = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">string</span> _Msg = <span class="keyword">string</span>.Empty;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">object</span> _Data = <span class="keyword">new</span> <span class="keyword">object</span>();</span><br><span class="line"></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 状态标识</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> Code &#123; <span class="keyword">get</span> =&gt; _Code; <span class="keyword">set</span> =&gt; _Code = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 返回消息</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">string</span> Msg &#123; <span class="keyword">get</span> =&gt; _Msg; <span class="keyword">set</span> =&gt; _Msg = <span class="keyword">value</span>; &#125;</span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> 返回数据</span></span><br><span class="line">    <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">object</span> Data &#123; <span class="keyword">get</span> =&gt; _Data; <span class="keyword">set</span> =&gt; _Data = <span class="keyword">value</span>; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>创建完成写好之后我们在红的地方Alt+Enter，哪里爆红点哪里（so easy），好了，不扯犊子了，每个接口的方法如下。</p>
+<p><strong>RequestUploadFile</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> MessageEntity <span class="title">RequestUploadFile</span>(<span class="params">[FromBody]RequestFileUploadEntity requestFile</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    LogUtil.Debug(<span class="string">$"RequestUploadFile 接收参数：<span class="subst">&#123;JsonConvert.SerializeObject(requestFile)&#125;</span>"</span>);</span><br><span class="line">    MessageEntity message = <span class="keyword">new</span> MessageEntity();</span><br><span class="line">    <span class="keyword">if</span> (requestFile.size &lt;= <span class="number">0</span> || requestFile.count &lt;= <span class="number">0</span> || <span class="keyword">string</span>.IsNullOrEmpty(requestFile.filedata))</span><br><span class="line">    &#123;</span><br><span class="line">        message.Code = <span class="number">-1</span>;</span><br><span class="line">        message.Msg = <span class="string">"参数有误"</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//这里需要记录文件相关信息，并返回文件guid名，后续请求带上此参数</span></span><br><span class="line">        <span class="keyword">string</span> guidName = Guid.NewGuid().ToString(<span class="string">"N"</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">//前期单台服务器可以记录Cache，多台后需考虑redis或数据库</span></span><br><span class="line">        CacheUtil.Set(guidName, requestFile, <span class="keyword">new</span> TimeSpan(<span class="number">0</span>, <span class="number">10</span>, <span class="number">0</span>), <span class="literal">true</span>);</span><br><span class="line"></span><br><span class="line">        message.Code = <span class="number">0</span>;</span><br><span class="line">        message.Msg = <span class="string">""</span>;</span><br><span class="line">        message.Data = <span class="keyword">new</span> &#123; filename = guidName &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> message;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>FileSave</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;MessageEntity&gt; <span class="title">FileSave</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">var</span> files = Request.Form.Files;</span><br><span class="line">    <span class="keyword">long</span> size = files.Sum(f =&gt; f.Length);</span><br><span class="line">    <span class="keyword">string</span> fileName = Request.Form[<span class="string">"filename"</span>];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">int</span> fileIndex = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">int</span>.TryParse(Request.Form[<span class="string">"fileindex"</span>], <span class="keyword">out</span> fileIndex);</span><br><span class="line">    LogUtil.Debug(<span class="string">$"FileSave开始执行获取数据：<span class="subst">&#123;fileIndex&#125;</span>_<span class="subst">&#123;size&#125;</span>"</span>);</span><br><span class="line">    MessageEntity message = <span class="keyword">new</span> MessageEntity();</span><br><span class="line">    <span class="keyword">if</span> (size &lt;= <span class="number">0</span> || <span class="keyword">string</span>.IsNullOrEmpty(fileName))</span><br><span class="line">    &#123;</span><br><span class="line">        message.Code = <span class="number">-1</span>;</span><br><span class="line">        message.Msg = <span class="string">"文件上传失败"</span>;</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (!CacheUtil.Exists(fileName))</span><br><span class="line">    &#123;</span><br><span class="line">        message.Code = <span class="number">-1</span>;</span><br><span class="line">        message.Msg = <span class="string">"请重新请求上传文件"</span>;</span><br><span class="line">        <span class="keyword">return</span> message;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> fileSize = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">string</span> filePath = <span class="string">$".<span class="subst">&#123;AprilConfig.FilePath&#125;</span><span class="subst">&#123;DateTime.Now.ToString(<span class="string">"yyyy-MM-dd"</span>)&#125;</span>/<span class="subst">&#123;fileName&#125;</span>"</span>;</span><br><span class="line">    <span class="keyword">string</span> saveFileName = <span class="string">$"<span class="subst">&#123;fileName&#125;</span>_<span class="subst">&#123;fileIndex&#125;</span>"</span>;</span><br><span class="line">    <span class="keyword">string</span> dirPath = Path.Combine(filePath, saveFileName);</span><br><span class="line">    <span class="keyword">if</span> (!Directory.Exists(filePath))</span><br><span class="line">    &#123;</span><br><span class="line">        Directory.CreateDirectory(filePath);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">foreach</span> (<span class="keyword">var</span> file <span class="keyword">in</span> files)</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">//如果有文件</span></span><br><span class="line">        <span class="keyword">if</span> (file.Length &gt; <span class="number">0</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            fileSize = <span class="number">0</span>;</span><br><span class="line">            fileSize = file.Length;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">using</span> (<span class="keyword">var</span> stream = <span class="keyword">new</span> FileStream(dirPath, FileMode.OpenOrCreate))</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="keyword">await</span> file.CopyToAsync(stream);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    message.Code = <span class="number">0</span>;</span><br><span class="line">    message.Msg = <span class="string">""</span>;</span><br><span class="line">    <span class="keyword">return</span> message;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>FileMerge</strong></p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">async</span> Task&lt;MessageEntity&gt; <span class="title">FileMerge</span>(<span class="params">[FromBody]Dictionary&lt;<span class="keyword">string</span>, <span class="keyword">object</span>&gt; fileInfo</span>)</span></span><br><span class="line"><span class="function"></span>      &#123;</span><br><span class="line">          MessageEntity message = <span class="keyword">new</span> MessageEntity();</span><br><span class="line">          <span class="keyword">string</span> fileName = <span class="keyword">string</span>.Empty;</span><br><span class="line">          <span class="keyword">if</span> (fileInfo.ContainsKey(<span class="string">"name"</span>))</span><br><span class="line">          &#123;</span><br><span class="line">              fileName = fileInfo[<span class="string">"name"</span>].ToString();</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">string</span>.IsNullOrEmpty(fileName))</span><br><span class="line">          &#123;</span><br><span class="line">              message.Code = <span class="number">-1</span>;</span><br><span class="line">              message.Msg = <span class="string">"文件名不能为空"</span>;</span><br><span class="line">              <span class="keyword">return</span> message;</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">//最终上传完成后，请求合并返回合并消息</span></span><br><span class="line">          <span class="keyword">try</span></span><br><span class="line">          &#123;</span><br><span class="line">              RequestFileUploadEntity requestFile = CacheUtil.Get&lt;RequestFileUploadEntity&gt;(fileName);</span><br><span class="line">              <span class="keyword">if</span> (requestFile == <span class="literal">null</span>)</span><br><span class="line">              &#123;</span><br><span class="line">                  message.Code = <span class="number">-1</span>;</span><br><span class="line">                  message.Msg = <span class="string">"合并失败"</span>;</span><br><span class="line">                  <span class="keyword">return</span> message;</span><br><span class="line">              &#125;</span><br><span class="line">              <span class="keyword">string</span> filePath = <span class="string">$".<span class="subst">&#123;AprilConfig.FilePath&#125;</span><span class="subst">&#123;DateTime.Now.ToString(<span class="string">"yyyy-MM-dd"</span>)&#125;</span>/<span class="subst">&#123;fileName&#125;</span>"</span>;</span><br><span class="line">              <span class="keyword">string</span> fileExt = requestFile.fileext;</span><br><span class="line">              <span class="keyword">string</span> fileMd5 = requestFile.filedata;</span><br><span class="line">              <span class="keyword">int</span> fileCount = requestFile.count;</span><br><span class="line">              <span class="keyword">long</span> fileSize = requestFile.size;</span><br><span class="line"></span><br><span class="line">              LogUtil.Debug(<span class="string">$"获取文件路径：<span class="subst">&#123;filePath&#125;</span>"</span>);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"获取文件类型：<span class="subst">&#123;fileExt&#125;</span>"</span>);</span><br><span class="line"></span><br><span class="line">              <span class="keyword">string</span> savePath = filePath.Replace(fileName, <span class="string">""</span>);</span><br><span class="line">              <span class="keyword">string</span> saveFileName = <span class="string">$"<span class="subst">&#123;fileName&#125;</span><span class="subst">&#123;fileExt&#125;</span>"</span>;</span><br><span class="line">              <span class="keyword">var</span> files = Directory.GetFiles(filePath);</span><br><span class="line">              <span class="keyword">string</span> fileFinalName = Path.Combine(savePath, saveFileName);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"获取文件最终路径：<span class="subst">&#123;fileFinalName&#125;</span>"</span>);</span><br><span class="line">              FileStream fs = <span class="keyword">new</span> FileStream(fileFinalName, FileMode.Create);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"目录文件下文件总数：<span class="subst">&#123;files.Length&#125;</span>"</span>);</span><br><span class="line"></span><br><span class="line">              LogUtil.Debug(<span class="string">$"目录文件排序前：<span class="subst">&#123;<span class="keyword">string</span>.Join(<span class="string">","</span>, files.ToArray())&#125;</span>"</span>);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"目录文件排序后：<span class="subst">&#123;<span class="keyword">string</span>.Join(<span class="string">","</span>, files.OrderBy(x =&gt; x.Length).ThenBy(x =&gt; x))&#125;</span>"</span>);</span><br><span class="line">              <span class="keyword">byte</span>[] finalBytes = <span class="keyword">new</span> <span class="keyword">byte</span>[fileSize];</span><br><span class="line">              <span class="keyword">foreach</span> (<span class="keyword">var</span> part <span class="keyword">in</span> files.OrderBy(x =&gt; x.Length).ThenBy(x =&gt; x))</span><br><span class="line">              &#123;</span><br><span class="line">                  <span class="keyword">var</span> bytes = System.IO.File.ReadAllBytes(part);</span><br><span class="line"></span><br><span class="line">                  <span class="keyword">await</span> fs.WriteAsync(bytes, <span class="number">0</span>, bytes.Length);</span><br><span class="line">                  bytes = <span class="literal">null</span>;</span><br><span class="line">                  System.IO.File.Delete(part);<span class="comment">//删除分块</span></span><br><span class="line">              &#125;</span><br><span class="line">              fs.Close();</span><br><span class="line">              <span class="comment">//这个地方会引发文件被占用异常</span></span><br><span class="line">              fs = <span class="keyword">new</span> FileStream(fileFinalName, FileMode.Open);</span><br><span class="line">              <span class="keyword">string</span> strMd5 = GetCryptoString(fs);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"文件数据MD5：<span class="subst">&#123;strMd5&#125;</span>"</span>);</span><br><span class="line">              LogUtil.Debug(<span class="string">$"文件上传数据：<span class="subst">&#123;JsonConvert.SerializeObject(requestFile)&#125;</span>"</span>);</span><br><span class="line">              fs.Close();</span><br><span class="line">              Directory.Delete(filePath);</span><br><span class="line">              <span class="comment">//如果MD5与原MD5不匹配，提示重新上传</span></span><br><span class="line">              <span class="keyword">if</span> (strMd5 != requestFile.filedata)</span><br><span class="line">              &#123;</span><br><span class="line">                  LogUtil.Debug(<span class="string">$"上传文件md5：<span class="subst">&#123;requestFile.filedata&#125;</span>,服务器保存文件md5：<span class="subst">&#123;strMd5&#125;</span>"</span>);</span><br><span class="line">                  message.Code = <span class="number">-1</span>;</span><br><span class="line">                  message.Msg = <span class="string">"MD5值不匹配"</span>;</span><br><span class="line">                  <span class="keyword">return</span> message;</span><br><span class="line">              &#125;</span><br><span class="line"></span><br><span class="line">              CacheUtil.Remove(fileInfo[<span class="string">"name"</span>].ToString());</span><br><span class="line">              message.Code = <span class="number">0</span>;</span><br><span class="line">              message.Msg = <span class="string">""</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">catch</span> (Exception ex)</span><br><span class="line">          &#123;</span><br><span class="line">              LogUtil.Error(<span class="string">$"合并文件失败，文件名称：<span class="subst">&#123;fileName&#125;</span>，错误信息：<span class="subst">&#123;ex.Message&#125;</span>"</span>);</span><br><span class="line">              message.Code = <span class="number">-1</span>;</span><br><span class="line">              message.Msg = <span class="string">"合并文件失败,请重新上传"</span>;</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> message;</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里说明下，在Merge的时候，主要校验md5值，用到了一个方法，我这里没有放到Util（其实是因为懒），代码如下：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> 文件流加密</span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;/summary&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;param name="fileStream"&gt;</span><span class="doctag">&lt;/param&gt;</span></span></span><br><span class="line">      <span class="comment"><span class="doctag">///</span> <span class="doctag">&lt;returns&gt;</span><span class="doctag">&lt;/returns&gt;</span></span></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="keyword">string</span> <span class="title">GetCryptoString</span>(<span class="params">Stream fileStream</span>)</span></span><br><span class="line"><span class="function"></span>      &#123;</span><br><span class="line">          MD5 md5 = <span class="keyword">new</span> MD5CryptoServiceProvider();</span><br><span class="line">          <span class="keyword">byte</span>[] cryptBytes = md5.ComputeHash(fileStream);</span><br><span class="line">          <span class="keyword">return</span> GetCryptoString(cryptBytes);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="function"><span class="keyword">private</span> <span class="keyword">string</span> <span class="title">GetCryptoString</span>(<span class="params"><span class="keyword">byte</span>[] cryptBytes</span>)</span></span><br><span class="line"><span class="function"></span>      &#123;</span><br><span class="line">          <span class="comment">//加密的二进制转为string类型返回</span></span><br><span class="line">          StringBuilder sb = <span class="keyword">new</span> StringBuilder();</span><br><span class="line">          <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; cryptBytes.Length; i++)</span><br><span class="line">          &#123;</span><br><span class="line">              sb.Append(cryptBytes[i].ToString(<span class="string">"x2"</span>));</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> sb.ToString();</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p>方法写好了之后，我们需不需要测试呢，那不是废话么，自己的代码不过一遍等着让测试人员搞你呢。</p>
+<blockquote>
+<p>再说个编码习惯，就是自己的代码自己最起码常规的过一遍，也不说跟大厂一样什么KPI啊啥的影响，自己的东西最起码拿出手让人一看知道用心了就行，不说什么测试全覆盖，就是1+1=2这种基本的正常就OK。</p>
+</blockquote>
+<p>程序运行之后，我这里写了个简单的测试界面，运行之后发现提示OPTIONS，果断跨域错误，还记得我们之前提到的跨域问题，这里给出解决方法。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/1.png" alt="测试"></p>
+<h3 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h3><p>跨域，就是我在这个区域，想跟另一个区域联系的时候，我们会碰到墙，这堵墙的目的就是，禁止不同区域的人私下交流沟通，但是现在我们就是不要这堵墙或者说要开几个门的话怎么做呢，net core有专门设置的地方，我们回到Startup这里。</p>
+<p>我们来看新增的代码：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> IServiceProvider <span class="title">ConfigureServices</span>(<span class="params">IServiceCollection services</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//…之前的代码忽略</span></span><br><span class="line">	</span><br><span class="line">    services.AddCors(options =&gt;</span><br><span class="line">    &#123;</span><br><span class="line">        options.AddPolicy(<span class="string">"AllowAll"</span>, p =&gt;</span><br><span class="line">        &#123;</span><br><span class="line">            p.AllowAnyOrigin()</span><br><span class="line">            .AllowAnyMethod()</span><br><span class="line">            .AllowAnyHeader()</span><br><span class="line">            .AllowCredentials();</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    </span><br><span class="line">    services.AddAspectCoreContainer();</span><br><span class="line">    <span class="keyword">return</span> services.BuildAspectInjectorProvider();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>AddCors</strong>来添加一个跨域处理方式，<strong>AddPolicy</strong>就是加个巡逻官，看看符合规则的放进来，不符合的直接赶出去。</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>介绍</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>AllowAnyOrigin</td>
+<td>允许所有的域名请求</td>
+</tr>
+<tr>
+<td>AllowAnyMethod</td>
+<td>允许所有的请求方式GET/POST/PUT/DELETE</td>
+</tr>
+<tr>
+<td>AllowAnyHeader</td>
+<td>允许所有的头部参数</td>
+</tr>
+<tr>
+<td>AllowCredentials</td>
+<td>允许携带Cookie</td>
+</tr>
+</tbody></table>
+<p>这里我使用的是允许所有，可以根据自身业务需要来调整，比如只允许部分域名访问，部分请求方式，部分Header：</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//只是示例，具体根据自身需要</span></span><br><span class="line">         services.AddCors(options =&gt;</span><br><span class="line">         &#123;</span><br><span class="line">             options.AddPolicy(<span class="string">"AllowSome"</span>, p =&gt;</span><br><span class="line">              &#123;</span><br><span class="line">                  p.WithOrigins(<span class="string">"https://www.baidu.com"</span>)</span><br><span class="line">                  .WithMethods(<span class="string">"GET"</span>, <span class="string">"POST"</span>)</span><br><span class="line">                  .WithHeaders(HeaderNames.ContentType, <span class="string">"x-custom-header"</span>);</span><br><span class="line">              &#125;);</span><br><span class="line">         &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>写好之后我们在<strong>Configure</strong>中声明注册使用哪个巡逻官。</p>
+<figure class="highlight csharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">Configure</span>(<span class="params">IApplicationBuilder app, IHostingEnvironment env</span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="comment">//…之前的</span></span><br><span class="line">    app.UseCors(<span class="string">"AllowAll"</span>);  </span><br><span class="line">    </span><br><span class="line">    app.UseHttpsRedirection();</span><br><span class="line">    app.UseMvc();      </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>好了，设置好跨域之后我们再来执行下上传操作。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/2.png" alt="测试"><br>我们看到这个提示之后，是不是能想起来什么，我们之前做过中间层不知道还记得不，忘了的朋友可以再看下<a href="/2019/07/30/aop-and-test-part-1/">net core Webapi基础工程搭建（七）——小试AOP及常规测试_Part 1</a>。<br>在appsettings.json添加上接口白名单。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">"AllowUrl": "/api/Values,/api/File/RequestUpload,/api/File/Upload,/api/File/Merge"</span><br></pre></td></tr></table></figure>
+
+<p>设置好之后，我们继续上传，这次总算是可以了（文件后缀这个忽略，测试使用，js就是做了个简单的substring）。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/3.png" alt="测试"><br>我们来查看上传文件记录的日志信息。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/4.png" alt="测试"><br>再来我们看下文件存储的位置，这个位置我们在appsettings里面已经设置过，可以根据自己业务需要调整。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/5.png" alt="测试"><br>打开文件看下是否有损坏，压缩包很容易看出来是否正常，只要能打开基本上（当然可能会有问题）没问题。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/6.png" alt="测试"><br>解压出来如果正常那肯定就是没问题了吧（压缩这个玩意儿真是牛逼，节省了多少的存储空间，虽说硬盘白菜价）。<br><img src="/2019/08/23/net-core-fileuploader-and-cors/7.png" alt="测试"></p>
+<h3 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h3><p>在整理文件上传这篇刚好捎带着把跨域也简单了过了一遍，下来需要再折腾的东西就是<strong>大文件的分片下载</strong>，大致的思路与文件上传一致，毕竟都是一个大蛋糕，切成好几块，你一块，剩下的都是我的。</p>
+
+    </div>
+    
+    
+        <nav id="article-nav">
+            
+                <a href="/2019/08/27/net-core-filedownload/" id="article-nav-newer" class="article-nav-link-wrap">
+                    <i class="icon-circle-left"></i>
+                    <div class="article-nav-title">
+                        
+                            net core WebApi——文件分片下载
+                        
+                    </div>
+                </a>
+            
+            
+                <a href="/2019/08/23/laravel-swoole-in-laradock/" id="article-nav-older" class="article-nav-link-wrap">
+                    <div class="article-nav-title">在 laradock 环境中使用 laravel-swoole 加速你的 laravel 应用</div>
+                    <i class="icon-circle-right"></i>
+                </a>
+            
+        </nav>
+    
+    <aside id="article-toc" role="navigation" class="article-toc fixed">
+    <div id="article-toc-inner" class="article-toc-inner">
+        <strong class="sidebar-title">
+        目录</strong>
+        <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#开始"><span class="toc-text">开始</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#测试"><span class="toc-text">测试</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跨域"><span class="toc-text">跨域</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#小结"><span class="toc-text">小结</span></a></li></ol>
+    </div>
+</aside>
+</article>
+
+<div id="container"></div>
+
+
+
+    <script src='//unpkg.com/valine/dist/Valine.min.js'></script>
+    <script>
+        new Valine({
+            el: '#container',
+            appId: 'oxinNxVcEtTnMxQAIoeWWIB8-MdYXbMMI',
+            appKey: 'egs7BlX8kO6FuIdaXxDvhe07',
+            notify: 'false',
+            verify: 'false',
+            avatar:'mp',
+            placeholder: '来啊，快活啊 (๑•ᴗ•๑)'
+        })
+    </script>
+
+
+
+
+
+  </section>
+</div>
+
+<footer class="footer">
+    <div class="footer-info">
+        <div class="footer-copy">
+            &copy; 2022 D-107
+        </div>
+        <div class="site-nav">
+            
+                <li class="nav-link">
+                    <a href="https://www.m-finder.com" target="_blank">M-finder</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://www.cnblogs.com/AprilBlank/" target="_blank">AprilBlank</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://blog.csdn.net/qq_27948659" target="_blank">大白</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="http://www.sgclzqq.com/" target="_blank">Sgclzqq</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://93xiaosi.github.io/" target="_blank">Wait</a>
+                </li>
+            
+                <li class="nav-link">
+                    <a href="https://thekingstyle.github.io/" target="_blank">WangWeiQiang</a>
+                </li>
+            
+        </div>
+        <div class="footer-by">
+            <a href="http://hexo.io/" target="_blank">Hexo</a> Theme
+            <a href="https://github.com/d-107/hexo-theme-sense" target="_blank">Sense</a> by D-107
+        </div>
+    </div>
+</footer>
+
+
+
+    <!-- scripts list from theme config.yml -->
+    
+        <script src="/js/jquery-3.4.1.min.js"></script>
+    
+        <script src="/js/sense.js"></script>
+    
+        <script src="/js/image-view.js"></script>
+    
+
+
+
+    <script src="/js/firework.js"></script>
+
+
+
+
+
+<script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/wanko.model.json"},"display":{"position":"left","width":200,"height":200},"mobile":{"show":false},"log":false});</script></body>
+</html>
